@@ -1,8 +1,10 @@
 const AnimalModel = require("../model/entidades/AnimalModel");
+const path = require('path');
+const fs = require('fs');
 
-const animalModel = new AnimalModel()
+const animalModel = new AnimalModel();
+
 class AnimalController {
-
     async obterTodos(req, res) {
         const animais = await animalModel.obterTodos();
         return res.status(200).json(animais);
@@ -15,29 +17,58 @@ class AnimalController {
     }
 
     async adicionar(req, res) {
-        const { numero_baia, nome, especie, sexo, castracao } = req.body;
-        console.log('Dados recebidos:', req.body);
-        const animal = new AnimalModel(0, numero_baia, nome, especie, sexo, castracao);
+        const { numero_baia, nome, especie, sexo, castracao, adocao } = req.body;
+        let foto_url = null;
+
+        if (req.files && req.files.photo) {
+            const photo = req.files.photo;
+            const uploadPath = path.join(__dirname, '../../uploads', photo.name);
+
+            photo.mv(uploadPath, function(err) {
+                if (err) {
+                    return res.status(500).json({ error: 'Erro ao salvar a foto' });
+                }
+            });
+
+            foto_url = `/uploads/${photo.name}`;
+        }
+
+        const animal = new AnimalModel(0, numero_baia, nome, especie, sexo, castracao, adocao, foto_url);
 
         try {
             await animalModel.adicionar(animal);
-            return res.status(201).json({ message: 'Cadastrado com successo' });
+            return res.status(201).json({ message: 'Cadastrado com sucesso' });
         } catch (error) {
-            console.log('Erro ao cadastrar animal:' + error);
+            console.log('Erro ao cadastrar animal:', error);
             res.status(500).json({ error: 'Erro ao cadastrar animal' + error });
         }
     }
 
     async atualizar(req, res) {
         const id = req.params.id;
-        const { numero_baia, nome, especie, sexo, castracao } = req.body;
-        const animal = new AnimalModel(id, numero_baia, nome, especie, sexo, castracao);
+        const { numero_baia, nome, especie, sexo, castracao, adocao } = req.body;
+        let foto_url = null;
+
+        if (req.files && req.files.photo) {
+            const photo = req.files.photo;
+            const uploadPath = path.join(__dirname, '../../uploads', photo.name);
+
+            photo.mv(uploadPath, function(err) {
+                if (err) {
+                    return res.status(500).json({ error: 'Erro ao salvar a foto' });
+                }
+            });
+
+            foto_url = `/uploads/${photo.name}`;
+        }
+
+        const animal = new AnimalModel(id, numero_baia, nome, especie, sexo, castracao, adocao, foto_url);
 
         try {
             await animalModel.atualizar(id, animal);
-            return res.status(201).json({ message: 'Atualização com successo' });
+            return res.status(201).json({ message: 'Atualização com sucesso' });
         } catch (error) {
-            console.log('Erro ao cadastrar animal:' + error);
+            console.log('Erro ao atualizar animal:', error);
             res.status(500).json({ error: 'Erro ao atualizar animal' + error });
         }
     }
