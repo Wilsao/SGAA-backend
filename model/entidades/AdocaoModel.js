@@ -56,12 +56,14 @@ class AdocaoModel {
   }
 
   async adicionarFormularioAdocao(dadosAdocao) {
-    // const result = await database.ExecutaComandoNonQuery(
-    //   "INSERT INTO adocoes SET ?", dadosAdocao
-    // );
-    await database.ExecutaComandoNonQuery('insert into adocoes set ?', dadosAdocao);
-
-    // return result.insertId;
+    const sql = 'INSERT INTO adocoes SET ?';
+    
+    try {
+      const result = await database.ExecutaComandoNonQuery(sql, dadosAdocao);
+      return result.insertId; // Retorna o ID do registro inserido
+    } catch (error) {
+      throw new Error(`Erro ao adicionar formulário de adoção: ${error.message}`);
+    }
   }
 
   async obterTodosFormulariosAdocao() {
