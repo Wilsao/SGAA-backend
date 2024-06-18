@@ -30,12 +30,16 @@ const animaisRoutes = require('./routers/AnimaisRoutes');
 const arrecadacaoRoutes = require('./routers/ArrecadacaoRoutes');
 const castracaoRoutes = require('./routers/CastracaoRoutes');
 const adocaoRoutes = require('./routers/AdocaoRoutes');
+const especieRoutes = require('./routers/EspecieRoutes');
+const cuidadorRoutes = require('./routers/CuidadorRoutes');
 
 // Configura as rotas
 app.use(animaisRoutes);
 app.use(arrecadacaoRoutes);
 app.use(castracaoRoutes);
 app.use(adocaoRoutes);
+app.use(especieRoutes);
+app.use(cuidadorRoutes);
 
 // Rotas para cadastro e atualização de animais
 app.put('/animal/:id', upload.single('foto'), async (req, res) => {

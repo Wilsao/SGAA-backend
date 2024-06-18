@@ -17,7 +17,7 @@ class AnimalController {
     }
 
     async adicionar(req, res) {
-        const { numero_baia, nome, especie, sexo, castracao, adocao } = req.body;
+        const { numero_baia, nome, especie, sexo, castracao, adocao, cuidador } = req.body;
         let foto_url = null;
 
         if (req.files && req.files.photo) {
@@ -33,7 +33,7 @@ class AnimalController {
             foto_url = `/uploads/${photo.name}`;
         }
 
-        const animal = new AnimalModel(0, numero_baia, nome, especie, sexo, castracao, adocao, foto_url);
+        const animal = new AnimalModel(0, numero_baia, nome, especie, sexo, castracao, adocao, cuidador, foto_url);
 
         try {
             await animalModel.adicionar(animal);
@@ -46,7 +46,7 @@ class AnimalController {
 
     async atualizar(req, res) {
         const id = req.params.id;
-        const { numero_baia, nome, especie, sexo, castracao, adocao } = req.body;
+        const { numero_baia, nome, especie, sexo, castracao, adocao, cuidador } = req.body;
         let foto_url = null;
 
         if (req.files && req.files.photo) {
@@ -62,7 +62,7 @@ class AnimalController {
             foto_url = `/uploads/${photo.name}`;
         }
 
-        const animal = new AnimalModel(id, numero_baia, nome, especie, sexo, castracao, adocao, foto_url);
+        const animal = new AnimalModel(id, numero_baia, nome, especie, sexo, castracao, adocao, cuidador, foto_url);
 
         try {
             await animalModel.atualizar(id, animal);

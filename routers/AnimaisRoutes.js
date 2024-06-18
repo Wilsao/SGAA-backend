@@ -14,4 +14,5 @@ router.delete('/animal/:id', animalController.excluir);
 router.get('/animal/filtrar/:termobusca', animalController.filtrar);
 router.post('/animais', (req, res) => animalController.adicionar(req, res));
 router.put('/animais/:id', (req, res) => animalController.atualizar(req, res));
+
 module.exports = router;

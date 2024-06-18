@@ -15,9 +15,9 @@ class CuidadorController {
     }
 
     async adicionar(req, res) {
-        const { nome } = req.body;
+        const { nome, endereco, email, telefone, tipo_pessoa, identificacao } = req.body;
         console.log('Dados recebidos:', req.body);
-        const cuidador = new CuidadorModel(0, nome);
+        const cuidador = new CuidadorModel(0, nome, endereco, email, telefone, tipo_pessoa, identificacao);
 
         try {
             await cuidadorModel.adicionar(cuidador);
@@ -30,8 +30,8 @@ class CuidadorController {
 
     async atualizar(req, res) {
         const id = req.params.id;
-        const { nome } = req.body;
-        const cuidador = new CuidadorModel(id, nome);
+        const { nome, endereco, email, telefone, tipo_pessoa, identificacao } = req.body;
+        const cuidador = new CuidadorModel(id, nome, endereco, email, telefone, tipo_pessoa, identificacao);
 
         try {
             await cuidadorModel.atualizar(id, cuidador);

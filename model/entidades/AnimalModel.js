@@ -3,7 +3,7 @@ const Database = require("../database");
 const database = new Database()
 
 class AnimalModel {
-    constructor(id, numero_baia, nome, especie, sexo, castracao, adocao, foto_url) {
+    constructor(id, numero_baia, nome, especie, sexo, castracao, adocao,  cuidador, foto_url) {
         this.id = id;
         this.numero_baia = numero_baia;
         this.nome = nome;
@@ -11,6 +11,7 @@ class AnimalModel {
         this.sexo = sexo;
         this.castracao = castracao;
         this.adocao = adocao;
+        this.cuidador = cuidador;
         this.foto_url = this.foto_url;
     }
 

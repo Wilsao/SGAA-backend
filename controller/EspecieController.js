@@ -15,29 +15,24 @@ class EspecieController {
     }
 
     async adicionar(req, res) {
-        const { nome, endereco, email, telefone, tipo_pessoa, identificacao } = req.body;
-    
+        const { nome } = req.body;
+        console.log('Dados recebidos:', req.body);
+        const especie = new EspecieModel(0, nome);
+
         try {
-            const existe = await especieModel.verificarExistenciaPorIdentificacao(identificacao);
-            if (existe) {
-                return res.status(400).json({ error: 'CPF/CNPJ já cadastrado' });
-            }
-    
-            const especie = new EspecieModel(0, nome, endereco, email, telefone, tipo_pessoa, identificacao);
             await especieModel.adicionar(especie);
-            
-            return res.status(201).json({ message: 'Cadastrado com sucesso' });
+            return res.status(201).json({ message: 'Cadastrado com successo' });
         } catch (error) {
-            console.log('Erro ao cadastrar espécie:', error);
-            res.status(500).json({ error: 'Erro ao cadastrar espécie' });
+            console.log('Erro ao cadastrar arrecadação:' + error);
+            res.status(500).json({ error: 'Erro ao cadastrar arrecadação' + error });
         }
     }
     
 
     async atualizar(req, res) {
         const id = req.params.id;
-        const { nome, endereco, email, telefone, tipo_pessoa, identificacao } = req.body;
-        const especie = new EspecieModel(id, nome, endereco, email, telefone, tipo_pessoa, identificacao);
+        const { nome } = req.body;
+        const especie = new EspecieModel(id, nome);
 
         try {
             await especieModel.atualizar(id, especie);

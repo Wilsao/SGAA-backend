@@ -1,5 +1,5 @@
-const EspecieController = require('../controller/EspecieController');
-const cuidadorController = new EspecieController();
+const CuidadorController = require('../controller/CuidadorController');
+const cuidadorController = new CuidadorController();
 const express = require('express');
 const router = express.Router();
 

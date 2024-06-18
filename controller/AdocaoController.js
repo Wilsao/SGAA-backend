@@ -7,7 +7,6 @@ const adocaoModel = new AdocaoModel();
 class AdocaoController {
   async adicionar(req, res) {
     const dadosAdocao = req.body;
-    // console.log('Vasco:' + req.body);
     try {
       const id = await adocaoModel.adicionarFormularioAdocao(dadosAdocao);
       return res.status(201).json({ message: 'Formulário de adoção cadastrado com sucesso', id });
