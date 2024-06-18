@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 04, 2024 at 05:27 AM
+-- Generation Time: Jun 18, 2024 at 02:52 AM
 -- Server version: 8.2.0
 -- PHP Version: 8.2.13
 
@@ -24,6 +24,35 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `adocoes`
+--
+
+DROP TABLE IF EXISTS `adocoes`;
+CREATE TABLE IF NOT EXISTS `adocoes` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `animal_id` int NOT NULL,
+  `nome` varchar(255) NOT NULL,
+  `data_nascimento` date DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
+  `telefone` varchar(20) NOT NULL,
+  `endereco` varchar(255) NOT NULL,
+  `cidade` varchar(100) NOT NULL,
+  `data_adocao` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `adocoes`
+--
+
+INSERT INTO `adocoes` (`id`, `animal_id`, `nome`, `data_nascimento`, `email`, `telefone`, `endereco`, `cidade`, `data_adocao`) VALUES
+(1, 1, 'João da Silva', '1990-01-01', 'joao.silva@example.com', '(11) 99999-9999', 'Rua das Flores, 123', 'São Paulo', '2024-06-16 17:46:07'),
+(5, 0, 'Wilson A. L. Junior', '1997-09-02', 'wilson@gmail.com', '(12) 31231-2312', 'Rua 21 de Abril, 200', 'Osvaldo Cruz', '2024-06-18 02:43:04');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `animais`
 --
 
@@ -31,47 +60,49 @@ DROP TABLE IF EXISTS `animais`;
 CREATE TABLE IF NOT EXISTS `animais` (
   `id` int NOT NULL AUTO_INCREMENT,
   `numero_baia` int NOT NULL,
-  `nome` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `castracao` enum('Sim','Não') COLLATE utf8mb4_general_ci NOT NULL,
-  `especie` enum('Cachorro','Gato') COLLATE utf8mb4_general_ci NOT NULL,
-  `sexo` enum('Macho','Fêmea') COLLATE utf8mb4_general_ci NOT NULL,
+  `nome` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `castracao` enum('Sim','Não') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `especie` int DEFAULT NULL,
+  `sexo` enum('Macho','Fêmea') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `adocao` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `foto_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `cuidador` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=123 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=128 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `animais`
 --
 
-INSERT INTO `animais` (`id`, `numero_baia`, `nome`, `castracao`, `especie`, `sexo`) VALUES
-(122, 106, 'Sam', 'Sim', 'Cachorro', 'Macho'),
-(121, 197, 'Sophie', 'Sim', 'Gato', 'Fêmea'),
-(120, 183, 'Oliver', 'Sim', 'Cachorro', 'Macho'),
-(119, 168, 'Riley', 'Não', 'Cachorro', 'Macho'),
-(118, 149, 'Molly', 'Sim', 'Gato', 'Fêmea'),
-(117, 138, 'Jack', 'Não', 'Cachorro', 'Macho'),
-(116, 126, 'Bella', 'Sim', 'Cachorro', 'Fêmea'),
-(115, 104, 'Teddy', 'Sim', 'Cachorro', 'Macho'),
-(114, 189, 'Nala', 'Sim', 'Gato', 'Fêmea'),
-(113, 178, 'Charlie', 'Não', 'Cachorro', 'Macho'),
-(112, 169, 'Lola', 'Sim', 'Gato', 'Fêmea'),
-(111, 158, 'Oscar', 'Sim', 'Cachorro', 'Macho'),
-(110, 147, 'Lily', 'Sim', 'Gato', 'Fêmea'),
-(109, 136, 'Cooper', 'Não', 'Cachorro', 'Macho'),
-(108, 123, 'Zoe', 'Sim', 'Gato', 'Fêmea'),
-(107, 114, 'Mickey', 'Não', 'Cachorro', 'Macho'),
-(106, 102, 'Daisy', 'Sim', 'Cachorro', 'Fêmea'),
-(105, 199, 'Chloe', 'Sim', 'Gato', 'Fêmea'),
-(104, 193, 'Loki', 'Não', 'Cachorro', 'Macho'),
-(103, 187, 'Bailey', 'Sim', 'Cachorro', 'Macho'),
-(102, 174, 'Sofia', 'Sim', 'Gato', 'Fêmea'),
-(101, 162, 'Simba', 'Não', 'Cachorro', 'Macho'),
-(100, 153, 'Mia', 'Sim', 'Gato', 'Fêmea'),
-(99, 145, 'Rocky', 'Não', 'Cachorro', 'Macho'),
-(98, 132, 'Cleo', 'Sim', 'Gato', 'Fêmea'),
-(97, 124, 'Milo', 'Sim', 'Cachorro', 'Macho'),
-(96, 117, 'Max', 'Não', 'Cachorro', 'Macho'),
-(95, 201, 'Lino', 'Sim', 'Cachorro', 'Macho'),
-(94, 101, 'Buddy', 'Sim', 'Cachorro', 'Macho');
+INSERT INTO `animais` (`id`, `numero_baia`, `nome`, `castracao`, `especie`, `sexo`, `adocao`, `foto_url`, `cuidador`) VALUES
+(120, 183, 'Oliver', 'Sim', 2, 'Macho', 'Não', NULL, 5),
+(119, 168, 'Riley', 'Não', 2, 'Macho', 'Sim', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(118, 149, 'Molly', 'Sim', 7, 'Fêmea', 'Sim', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(117, 138, 'Jack', 'Não', 2, 'Macho', 'Sim', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(116, 126, 'Bella', 'Sim', 2, 'Fêmea', 'Sim', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(115, 104, 'Teddy', 'Sim', 2, 'Macho', 'Não', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(114, 189, 'Nala', 'Sim', 7, 'Fêmea', 'Sim', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(113, 178, 'Charlie', 'Não', 2, 'Macho', 'Sim', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(112, 169, 'Lola', 'Sim', 7, 'Fêmea', 'Sim', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(111, 158, 'Oscar', 'Sim', 2, 'Macho', 'Não', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(110, 147, 'Lily', 'Sim', 7, 'Fêmea', 'Sim', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(109, 136, 'Cooper', 'Não', 2, 'Macho', 'Não', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(108, 123, 'Zoe', 'Sim', 7, 'Fêmea', 'Não', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(107, 114, 'Mickey', 'Não', 2, 'Macho', 'Sim', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(106, 102, 'Daisy', 'Sim', 2, 'Fêmea', 'Não', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(105, 199, 'Chloe', 'Sim', 7, 'Fêmea', 'Sim', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(104, 193, 'Loki', 'Não', 2, 'Macho', 'Sim', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(103, 187, 'Bailey', 'Sim', 2, 'Macho', 'Não', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(102, 174, 'Sofia', 'Sim', 7, 'Fêmea', 'Sim', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(101, 162, 'Simba', 'Não', 2, 'Macho', 'Sim', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(100, 153, 'Mia', 'Sim', 7, 'Fêmea', 'Não', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(99, 145, 'Rocky', 'Não', 2, 'Macho', 'Sim', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(98, 132, 'Cleo', 'Sim', 7, 'Fêmea', 'Sim', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(97, 124, 'Milo', 'Sim', 2, 'Macho', 'Não', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(96, 117, 'Max', 'Não', 2, 'Macho', 'Não', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(95, 201, 'Lino', 'Sim', 2, 'Macho', 'Sim', 'https://random.dog/0e198464-e755-43bb-a2f8-9db136507f38.JPG', NULL),
+(94, 101, 'Buddy', 'Sim', 2, 'Macho', 'Não', NULL, NULL),
+(127, 666, 'Junin', 'Sim', 3, 'Fêmea', 'Não', NULL, 5);
 
 -- --------------------------------------------------------
 
@@ -84,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `arrecadacoes` (
   `id` int NOT NULL AUTO_INCREMENT,
   `data_evento` date DEFAULT NULL,
   `valor_arrecadado` decimal(10,2) DEFAULT NULL,
-  `descricao` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `descricao` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -118,13 +149,13 @@ DROP TABLE IF EXISTS `castracoes`;
 CREATE TABLE IF NOT EXISTS `castracoes` (
   `id` int NOT NULL AUTO_INCREMENT,
   `data_evento` date DEFAULT NULL,
-  `tipo_animal` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `sexo_animal` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `tipo_animal` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `sexo_animal` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `quantidade_castrada` int DEFAULT NULL,
-  `local_evento` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `descricao` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `local_evento` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `descricao` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `castracoes`
@@ -134,7 +165,7 @@ INSERT INTO `castracoes` (`id`, `data_evento`, `tipo_animal`, `sexo_animal`, `qu
 (1, '2022-03-15', 'Cachorro', 'Macho', 3, 'Clínica Veterinária ABC', 'Castração realizada com sucesso.'),
 (2, '2022-05-20', 'Gato', 'Fêmea', 1, 'Abrigo de Animais XYZ', 'Gato castrado resgatado da rua.'),
 (3, '2022-07-10', 'Cachorro', 'Fêmea', 2, 'Centro Comunitário 123', 'Evento de castração em parceria com ONG local.'),
-(4, '2023-01-05', 'Cachorro', 'Macho', 4, 'Parque Municipal', 'Evento anual de castração de cães.'),
+(25, '2024-06-17', 'Gato', 'Macho', 2, 'asdasd', 'teste'),
 (6, '2023-12-10', 'Cachorro', 'Fêmea', 3, 'Clínica Veterinária XYZ', 'Castração realizada durante campanha de adoção.'),
 (7, '2022-02-10', 'Cachorro', 'Macho', 2, 'Clínica Veterinária Central', 'Cachorro castrado para controle populacional.'),
 (8, '2022-04-25', 'Gato', 'Fêmea', 3, 'Residência do voluntário', 'Evento de castração voluntária organizado pela comunidade.'),
@@ -150,6 +181,90 @@ INSERT INTO `castracoes` (`id`, `data_evento`, `tipo_animal`, `sexo_animal`, `qu
 (18, '2022-12-18', 'Gato', 'Fêmea', 2, 'Casa de Voluntários', 'Gato de rua castrado por voluntários em ação comunitária.'),
 (19, '2023-04-01', 'Cachorro', 'Macho', 1, 'Loja de Petshop', 'Evento de castração em comemoração ao aniversário da loja de petshop.'),
 (20, '2023-07-25', 'Gato', 'Fêmea', 3, 'Centro de Recreação', 'Evento de castração durante programação de atividades recreativas.');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cuidadores`
+--
+
+DROP TABLE IF EXISTS `cuidadores`;
+CREATE TABLE IF NOT EXISTS `cuidadores` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `endereco` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `telefone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `tipo_pessoa` enum('PF','PJ') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `identificacao` varchar(18) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cuidadores`
+--
+
+INSERT INTO `cuidadores` (`id`, `nome`, `endereco`, `email`, `telefone`, `tipo_pessoa`, `identificacao`) VALUES
+(2, 'João Souza', 'Av. Paulista, 456, São Paulo, SP', 'joao.souza@example.com', '(11) 99876-5432', 'PF', '98765432100'),
+(3, 'Ana Pereira', 'Rua dos Lírios, 789, Rio de Janeiro, RJ', 'ana.pereira@example.com', '(21) 98765-1234', 'PF', '11122233344'),
+(4, 'Clinica Bem Estar', 'Rua das Palmeiras, 101, Belo Horizonte, MG', 'contato@bemestar.com', '(31) 98765-6789', 'PJ', '42422841000137'),
+(5, 'Saúde e Vida Ltda', 'Av. Brasil, 202, Brasília, DF', 'contato@saudeevida.com', '(61) 99876-1234', 'PJ', '42.422.841/0001-37');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `especies`
+--
+
+DROP TABLE IF EXISTS `especies`;
+CREATE TABLE IF NOT EXISTS `especies` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `especies`
+--
+
+INSERT INTO `especies` (`id`, `nome`) VALUES
+(7, 'Gato'),
+(2, 'Cachorro'),
+(3, 'Pato');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `forms`
+--
+
+DROP TABLE IF EXISTS `forms`;
+CREATE TABLE IF NOT EXISTS `forms` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `data_envio` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `nome_completo` varchar(100) NOT NULL,
+  `data_nascimento` date DEFAULT NULL,
+  `email` varchar(100) NOT NULL,
+  `telefone` varchar(20) NOT NULL,
+  `endereco_completo` text NOT NULL,
+  `cidade` varchar(50) NOT NULL,
+  `renda_mensal` decimal(10,2) DEFAULT NULL,
+  `profissao` varchar(100) DEFAULT NULL,
+  `sobre_familia` text,
+  `estado_civil` varchar(20) DEFAULT NULL,
+  `tem_criancas` tinyint(1) DEFAULT NULL,
+  `idade_criancas` varchar(100) DEFAULT NULL,
+  `alergia` tinyint(1) DEFAULT NULL,
+  `tratamento_medico` text,
+  `todos_concordam` tinyint(1) DEFAULT NULL,
+  `proprio_ou_alugado` varchar(20) DEFAULT NULL,
+  `tipo_imovel` varchar(20) DEFAULT NULL,
+  `permite_animais` tinyint(1) DEFAULT NULL,
+  `animal_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  KEY `animal_id` (`animal_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
