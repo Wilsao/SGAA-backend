@@ -1,6 +1,9 @@
 const EspecieModel = require("../model/entidades/EspecieModel");
+const AnimalModel = require("../model/entidades/AnimalModel");
 
-const especieModel = new EspecieModel()
+const especieModel = new EspecieModel();
+const animalModel = new AnimalModel();
+
 class EspecieController {
 
     async obterTodos(req, res) {
@@ -27,7 +30,6 @@ class EspecieController {
             res.status(500).json({ error: 'Erro ao cadastrar arrecadação' + error });
         }
     }
-    
 
     async atualizar(req, res) {
         const id = req.params.id;
@@ -46,6 +48,10 @@ class EspecieController {
     async excluir(req, res) {
         const id = req.params.id;
         try {
+            const count = await animalModel.contarPorEspecie(id);
+            if (count > 0) {
+                return res.status(400).json({ error: 'Não é possível excluir a espécie, pois há animais associados a ela.' });
+            }
             await especieModel.delete(id);
             res.status(200).json({ message: 'Item removido' });
         } catch (error) {
@@ -59,7 +65,7 @@ class EspecieController {
         const especies = await especieModel.filtrar(termobusca);
         return res.status(200).json(especies);
     }
-    
+
     async filtrarPorAno(req, res) {
         const ano = req.params.ano;
         const especies = await especieModel.filtrarPorAno(ano);

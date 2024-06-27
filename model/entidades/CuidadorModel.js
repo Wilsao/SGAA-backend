@@ -23,6 +23,11 @@ class CuidadorModel {
         return result[0];
     }
 
+    async verificarIdentificacaoExistente(identificacao) {
+        const result = await database.ExecutaComando('select * from cuidadores where identificacao=?', [identificacao]);
+        return result.length > 0;
+    }
+
     async adicionar(dadosCuidador) {
         await database.ExecutaComandoNonQuery('insert into cuidadores set ?', dadosCuidador);
     }
