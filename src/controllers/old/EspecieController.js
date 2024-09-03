@@ -1,5 +1,5 @@
-const EspecieModel = require("../model/entidades/EspecieModel");
-const AnimalModel = require("../model/entidades/AnimalModel");
+const EspecieModel = require("../../models/model/entidades/EspecieModel");
+const AnimalModel = require("../../models/model/entidades/AnimalModel");
 
 const especieModel = new EspecieModel();
 const animalModel = new AnimalModel();

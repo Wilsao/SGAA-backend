@@ -1,5 +1,5 @@
-const CuidadorModel = require("../model/entidades/CuidadorModel");
-const AnimalModel = require("../model/entidades/AnimalModel");
+const CuidadorModel = require("../../models/model/entidades/CuidadorModel");
+const AnimalModel = require("../../models/model/entidades/AnimalModel");
 
 const cuidadorModel = new CuidadorModel();
 const animalModel = new AnimalModel();

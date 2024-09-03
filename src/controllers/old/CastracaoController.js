@@ -1,26 +1,26 @@
-const ArrecadacaoModel = require("../model/entidades/ArrecadacaoModel");
+const CastracaoModel = require("../../models/model/entidades/CastracaoModel");
 
-const arrecadacaoModel = new ArrecadacaoModel()
-class ArrecadacaoController {
+const castracaoModel = new CastracaoModel()
+class CastracaoController {
 
     async obterTodos(req, res) {
-        const arrecadacoes = await arrecadacaoModel.obterTodos();
+        const arrecadacoes = await castracaoModel.obterTodos();
         return res.status(200).json(arrecadacoes);
     }
 
     async obterPorId(req, res) {
         const id = req.params.id;
-        const arrecadacao = await arrecadacaoModel.obterPorId(id);
-        return res.status(200).json(arrecadacao);
+        const castracao = await castracaoModel.obterPorId(id);
+        return res.status(200).json(castracao);
     }
 
     async adicionar(req, res) {
-        const { data_evento, valor_arrecadado, descricao } = req.body;
+        const { data_evento, tipo_animal, sexo_animal, quantidade_castrada, local_evento, descricao } = req.body;
         console.log('Dados recebidos:', req.body);
-        const arrecadacao = new ArrecadacaoModel(0, data_evento, valor_arrecadado, descricao);
+        const castracao = new CastracaoModel(0, data_evento, tipo_animal, sexo_animal, quantidade_castrada, local_evento, descricao);
 
         try {
-            await arrecadacaoModel.adicionar(arrecadacao);
+            await castracaoModel.adicionar(castracao);
             return res.status(201).json({ message: 'Cadastrado com successo' });
         } catch (error) {
             console.log('Erro ao cadastrar arrecadação:' + error);
@@ -30,11 +30,11 @@ class ArrecadacaoController {
 
     async atualizar(req, res) {
         const id = req.params.id;
-        const { data_evento, valor_arrecadado, descricao } = req.body;
-        const arrecadacao = new ArrecadacaoModel(id, data_evento, valor_arrecadado, descricao);
+        const { data_evento, tipo_animal, sexo_animal, quantidade_castrada, local_evento, descricao } = req.body;
+        const castracao = new CastracaoModel(id, data_evento, tipo_animal, sexo_animal, quantidade_castrada, local_evento, descricao);
 
         try {
-            await arrecadacaoModel.atualizar(id, arrecadacao);
+            await castracaoModel.atualizar(id, castracao);
             return res.status(201).json({ message: 'Atualização com successo' });
         } catch (error) {
             console.log('Erro ao cadastrar arrecadação:' + error);
@@ -45,7 +45,7 @@ class ArrecadacaoController {
     async excluir(req, res) {
         const id = req.params.id;
         try {
-            await arrecadacaoModel.delete(id);
+            await castracaoModel.delete(id);
             res.status(200).json({ message: 'Item removido' });
         } catch (error) {
             console.log('Erro ao tentar excluir arrecadação', error);
@@ -55,15 +55,15 @@ class ArrecadacaoController {
 
     async filtrar(req, res) {
         const termobusca = req.params.termobusca;
-        const arrecadacoes = await arrecadacaoModel.filtrar(termobusca);
+        const arrecadacoes = await castracaoModel.filtrar(termobusca);
         return res.status(200).json(arrecadacoes);
     }
-    
+
     async filtrarPorAno(req, res) {
         const ano = req.params.ano;
-        const arrecadacoes = await arrecadacaoModel.filtrarPorAno(ano);
+        const arrecadacoes = await castracaoModel.filtrarPorAno(ano);
         return res.status(200).json(arrecadacoes);
     }
 }
 
-module.exports = ArrecadacaoController;
+module.exports = CastracaoController;
