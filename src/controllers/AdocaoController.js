@@ -1,4 +1,4 @@
-const database = require("../models");
+const database = require("../database/models");
 
 class AdocaoController {
   async obterTodos(req, res) {

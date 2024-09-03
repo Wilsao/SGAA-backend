@@ -1,4 +1,4 @@
-const database = require("../models");
+const database = require("../database/models");
 
 class UsuarioController {
   async obterTodos(req, res) {
@@ -16,7 +16,7 @@ class UsuarioController {
     try {
       const usuario = await database.Usuario.findOne({ where: { id: id } });
 
-      if (!adocao)
+      if (!usuario)
         return res.status(404).json({ error: 'Adocão não encontrada' });
 
       return res.status(200).json(usuario);
