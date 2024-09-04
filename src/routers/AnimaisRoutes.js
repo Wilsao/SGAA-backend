@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const fileUpload = require('express-fileupload');
-const AnimalController = require('../controllers/old/AnimalController.js');
+const animalController = require('../controllers/old/AnimalController.js');
+const AnimalController = new animalController();
 
 const router = Router();
 

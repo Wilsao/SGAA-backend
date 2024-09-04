@@ -1,32 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1:3306
--- Generation Time: Jun 27, 2024 at 03:06 AM
--- Server version: 8.2.0
--- PHP Version: 8.2.13
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `aulasads`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `adocoes`
---
-
 DROP TABLE IF EXISTS `adocoes`;
 CREATE TABLE IF NOT EXISTS `adocoes` (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -42,19 +13,9 @@ CREATE TABLE IF NOT EXISTS `adocoes` (
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `adocoes`
---
-
 INSERT INTO `adocoes` (`id`, `animal_id`, `nome`, `data_nascimento`, `email`, `telefone`, `endereco`, `cidade`, `data_adocao`) VALUES
 (1, 1, 'João da Silva', '1990-01-01', 'joao.silva@example.com', '(11) 99999-9999', 'Rua das Flores, 123', 'São Paulo', '2024-06-16 17:46:07'),
 (5, 0, 'Wilson A. L. Junior', '1997-09-02', 'wilson@gmail.com', '(12) 31231-2312', 'Rua 21 de Abril, 200', 'Osvaldo Cruz', '2024-06-18 02:43:04');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `animais`
---
 
 DROP TABLE IF EXISTS `animais`;
 CREATE TABLE IF NOT EXISTS `animais` (
@@ -80,10 +41,6 @@ CREATE TABLE IF NOT EXISTS `animais` (
   KEY `especie` (`especie`)
 ) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `animais`
---
-
 INSERT INTO `animais` (`id`, `nome`, `sexo`, `cor_pelagem`, `deficiencia`, `data_ocorrencia`, `data_nascimento_aproximada`, `numero_baia`, `numero_chip`, `condicao_resgate`, `cuidador`, `especie`, `castracao`, `adocao`, `adotado`, `morto`, `foto_url`) VALUES
 (1, 'Rex', 'Macho', 'Preto', '', '2023-05-10', '2022-06-15', 'B-001', '', 'Abandonado', 1, 1, 1, 1, 0, 0, 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Black_cat_in_Pamukkale%2C_Turkey.jpg/330px-Black_cat_in_Pamukkale%2C_Turkey.jpg'),
 (2, 'Luna', 'Fêmea', 'Marrom', '', '2023-04-20', '2022-05-10', 'B-002', '', 'Resgatado de rua', 1, 1, 1, 1, 0, 0, 'https://t1.ea.ltmcdn.com/pt/razas/0/1/2/havana_210_0_orig.jpg'),
@@ -103,12 +60,6 @@ INSERT INTO `animais` (`id`, `nome`, `sexo`, `cor_pelagem`, `deficiencia`, `data
 (16, 'Daniel', 'Macho', 'Branco', '', '1899-11-30', '1899-11-30', '', '', '', 11, 3, 0, 0, 0, 0, 'https://t3.gstatic.com/licensed-image?q=tbn:ANd9GcRlex2yeMomsbkm0qzpHjtPf8j9QLCDPLZ_brREwaQIrpsnwot3sOfn8Qr3ujA92cho'),
 (17, 'Juninho', 'Macho', 'Preto', '', '2024-05-30', '2024-05-10', 'B-016', '', '', 1, 1, 0, 1, 0, 0, 'https://bp2.blogger.com/_dORqaACJFbs/R1Q4Vnf2W-I/AAAAAAAAARg/9oAd2B32zLA/s0-d/Cemit%C3%A9rio+-+filhote+pretinho+ronronando+mais+alto+que+o+motor+do+carro+velho.jpg');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `arrecadacoes`
---
-
 DROP TABLE IF EXISTS `arrecadacoes`;
 CREATE TABLE IF NOT EXISTS `arrecadacoes` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -117,10 +68,6 @@ CREATE TABLE IF NOT EXISTS `arrecadacoes` (
   `descricao` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `arrecadacoes`
---
 
 INSERT INTO `arrecadacoes` (`id`, `data_evento`, `valor_arrecadado`, `descricao`) VALUES
 (2, '2022-03-02', 2000.50, 'Doação para auxiliar no tratamento médico de animais resgatados'),
@@ -137,12 +84,6 @@ INSERT INTO `arrecadacoes` (`id`, `data_evento`, `valor_arrecadado`, `descricao`
 (14, '2023-06-15', 2300.00, 'Arrecadação para campanha de vacinação e controle de doenças contagiosas em animais'),
 (15, '2023-07-28', 2500.25, 'Evento de conscientização sobre abandono de animais e arrecadação para resgate de animais em situação de rua');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `castracoes`
---
-
 DROP TABLE IF EXISTS `castracoes`;
 CREATE TABLE IF NOT EXISTS `castracoes` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -154,10 +95,6 @@ CREATE TABLE IF NOT EXISTS `castracoes` (
   `descricao` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `castracoes`
---
 
 INSERT INTO `castracoes` (`id`, `data_evento`, `tipo_animal`, `sexo_animal`, `quantidade_castrada`, `local_evento`, `descricao`) VALUES
 (6, '2023-12-10', 'Cachorro', 'Fêmea', 3, 'Clínica Veterinária XYZ', 'Castração realizada durante campanha de adoção.'),
@@ -176,12 +113,6 @@ INSERT INTO `castracoes` (`id`, `data_evento`, `tipo_animal`, `sexo_animal`, `qu
 (19, '2023-04-01', 'Cachorro', 'Macho', 1, 'Loja de Petshop', 'Evento de castração em comemoração ao aniversário da loja de petshop.'),
 (20, '2023-07-25', 'Cachorro', 'Fêmea', 10, 'Centro de Recreação', 'Evento de castração durante programação de atividades recreativas.');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `cuidadores`
---
-
 DROP TABLE IF EXISTS `cuidadores`;
 CREATE TABLE IF NOT EXISTS `cuidadores` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -194,19 +125,9 @@ CREATE TABLE IF NOT EXISTS `cuidadores` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `cuidadores`
---
-
 INSERT INTO `cuidadores` (`id`, `nome`, `endereco`, `email`, `telefone`, `tipo_pessoa`, `identificacao`) VALUES
 (11, 'teste a exclusão', 'teste', 'teste@teste.com', '(12) 83712-9873', 'PF', '161.832.831-00'),
 (1, 'SPAA', 'Rua Maria Rebellato, 142 - Colina do Sol - Presidente Prudente - SP', 'spaa@gmail.com', '(18) 18888-8888', 'PJ', '04.670.312/0001-63');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `especies`
---
 
 DROP TABLE IF EXISTS `especies`;
 CREATE TABLE IF NOT EXISTS `especies` (
@@ -215,20 +136,10 @@ CREATE TABLE IF NOT EXISTS `especies` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `especies`
---
-
 INSERT INTO `especies` (`id`, `nome`) VALUES
 (1, 'Gato'),
 (2, 'Cachorro'),
 (3, 'Pato');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `forms`
---
 
 DROP TABLE IF EXISTS `forms`;
 CREATE TABLE IF NOT EXISTS `forms` (

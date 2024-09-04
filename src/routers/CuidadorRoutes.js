@@ -1,5 +1,6 @@
 const { Router } = require('express');
-const CuidadorController = require('../controllers/old/CuidadorController.js');
+const cuidadorController = require('../controllers/old/CuidadorController.js');
+const CuidadorController = new cuidadorController();
 
 const router = Router();
 

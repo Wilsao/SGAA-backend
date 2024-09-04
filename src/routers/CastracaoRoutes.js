@@ -1,5 +1,6 @@
 const { Router } = require('express');
-const CastracaoController = require('../controllers/old/CastracaoController.js');
+const castracaoController = require('../controllers/old/CastracaoController.js');
+const CastracaoController = new castracaoController();
 
 const router = Router();
 
