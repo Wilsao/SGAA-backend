@@ -1,4 +1,4 @@
-const CastracaoModel = require("../../models/model/entidades/CastracaoModel");
+const CastracaoModel = require("../../database/models/old/entidades/CastracaoModel");
 
 const castracaoModel = new CastracaoModel()
 class CastracaoController {

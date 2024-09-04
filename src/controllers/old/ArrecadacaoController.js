@@ -1,4 +1,4 @@
-const ArrecadacaoModel = require("../../models/model/entidades/ArrecadacaoModel");
+const ArrecadacaoModel = require("../../database/models/old/entidades/ArrecadacaoModel");
 
 const arrecadacaoModel = new ArrecadacaoModel()
 class ArrecadacaoController {

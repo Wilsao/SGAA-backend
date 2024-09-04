@@ -5,7 +5,7 @@ const usuarios = require('./UsuarioRoutes.js');
 // const especie = require('./EspecieRoutes.js');
 // const castracao = require('./CastracaoRoutes.js');
 // const arrecadacao = require('./ArrecadacaoRoutes.js');
-const adocao = require('./AdocaoRoutes.js');
+// const adocao = require('./AdocaoRoutes.js');
 
 module.exports = app => {
   app.use(

@@ -1,4 +1,4 @@
-const AdocaoModel = require("../../models/model/entidades/AdocaoModel");
+const AdocaoModel = require("../../database/models/old/entidades/AdocaoModel");
 const path = require('path');
 
 

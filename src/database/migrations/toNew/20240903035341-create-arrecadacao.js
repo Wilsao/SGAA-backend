@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('usuarios', {
+    await queryInterface.createTable('Arrecadacaos', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,27 +11,6 @@ module.exports = {
       },
       nome: {
         type: Sequelize.STRING
-      },
-      email: {
-        type: Sequelize.STRING
-      },
-      senha: {
-        type: Sequelize.STRING
-      },
-      cpf: {
-        type: Sequelize.STRING
-      },
-      tipo_usuario_id: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'tipos_usuarios',
-          key: 'id'
-        }
-      },
-      status: {
-        defaultValue: true,
-        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -46,6 +25,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('usuarios');
+    await queryInterface.dropTable('Arrecadacaos');
   }
 };
