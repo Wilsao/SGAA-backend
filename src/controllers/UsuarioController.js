@@ -1,4 +1,5 @@
 const database = require("../database/models");
+const { hash } = require("bcryptjs");
 
 class UsuarioController {
   async obterTodos(req, res) {
@@ -29,7 +30,14 @@ class UsuarioController {
   async adicionar(req, res) {
     const dados = req.body;
     try {
-      const id = await database.Usuario.create(dados);
+      const hashSenha = await hash(dados.senha, 10);
+      const id = await database.Usuario.create({
+        nome: dados.nome,
+        email: dados.email,
+        senha: hashSenha,
+        tipo_usuario_id: dados.tipo_usuario_id
+      });
+
       return res.status(201).json({ message: 'Usuario criado com sucesso', id });
     }
     catch (erro) {

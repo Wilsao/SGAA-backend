@@ -26,4 +26,4 @@ class AdocaoController {
   }
 }
 
-module.exports = new AdocaoController;
+module.exports = new AdocaoController();

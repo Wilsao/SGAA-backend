@@ -1,7 +1,9 @@
 const { Router } = require('express');
 const UsuarioController = require('../controllers/UsuarioController.js');
+const autenticado = require('../middleware/autenticado.js');
 
 const router = Router();
+router.use(autenticado);
 
 router.get('/usuario/', UsuarioController.obterTodos);
 router.get('/usuario/email/', UsuarioController.obterPorEmail);

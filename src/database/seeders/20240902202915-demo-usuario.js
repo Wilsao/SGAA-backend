@@ -1,12 +1,17 @@
+const { hash } = require('bcryptjs');
+
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
+    const hashSenha = await hash('password', 10);
+
     await queryInterface.bulkInsert('usuarios', [
       {
         nome: 'Solange Estudante',
         email: 'solange@email.com',
+        senha: hashSenha,
         tipo_usuario_id: 1,
         cpf: '63058133022',
         status: true,
@@ -16,6 +21,7 @@ module.exports = {
       {
         nome: 'Igor Estudante',
         email: 'igor@email.com',
+        senha: hashSenha,
         cpf: '99018205028',
         tipo_usuario_id: 2,
         status: true,
@@ -25,6 +31,7 @@ module.exports = {
       {
         nome: 'Aline Estudante',
         email: 'aline@email.com',
+        senha: hashSenha,
         cpf: '92797497066',
         tipo_usuario_id: 2,
         status: true,
@@ -34,6 +41,7 @@ module.exports = {
       {
         nome: 'Fernando Estudante',
         email: 'fernando@email.com',
+        senha: hashSenha,
         cpf: '17195730000',
         tipo_usuario_id: 2,
         status: true,
@@ -43,6 +51,7 @@ module.exports = {
       {
         nome: 'Ricardo Docente',
         email: 'ricardo@email.com',
+        senha: hashSenha,
         cpf: '06946507061',
         tipo_usuario_id: 2,
         status: true,
@@ -52,6 +61,7 @@ module.exports = {
       {
         nome: 'Dine Docente',
         email: 'dine@email.com',
+        senha: hashSenha,
         cpf: '80941142078',
         tipo_usuario_id: 2,
         status: true,
