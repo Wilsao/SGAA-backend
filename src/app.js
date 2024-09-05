@@ -7,11 +7,12 @@ const cors = require('cors');
 const routes = require('./routers');
 
 const app = express();
-routes(app);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
+
+routes(app);
 
 // app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

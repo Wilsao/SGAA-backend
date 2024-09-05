@@ -11,6 +11,7 @@ const adocao = require('./AdocaoRoutes.js');
 module.exports = app => {
   app.use(
     express.json(),
+    adocao,
     auth,
     usuarios,
     animal,
@@ -18,6 +19,5 @@ module.exports = app => {
     especie,
     castracao,
     arrecadacao,
-    adocao
   )
 }

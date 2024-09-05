@@ -1,7 +1,6 @@
 const AdocaoModel = require("../../database/models/old/entidades/AdocaoModel");
 const path = require('path');
 
-
 const adocaoModel = new AdocaoModel();
 
 class AdocaoController {
