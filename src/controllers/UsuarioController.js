@@ -35,7 +35,7 @@ class UsuarioController {
         nome: dados.nome,
         email: dados.email,
         senha: hashSenha,
-        tipo_usuario_id: dados.tipo_usuario_id
+        tipo_usuario_id: 2
       });
 
       return res.status(201).json({ message: 'Usuario criado com sucesso', id });

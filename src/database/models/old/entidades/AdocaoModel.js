@@ -57,7 +57,7 @@ class AdocaoModel {
 
   async adicionarFormularioAdocao(dadosAdocao) {
     const sql = 'INSERT INTO adocoes SET ?';
-    
+
     try {
       const result = await database.ExecutaComandoNonQuery(sql, dadosAdocao);
       return result.insertId; // Retorna o ID do registro inserido
