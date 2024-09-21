@@ -1,11 +1,23 @@
 const database = require("../database/models");
 const { hash } = require("bcryptjs");
 
+const usuarioDTO = require('../dtos/usuario/usuarioDTO');
+
 class UsuarioController {
   async obterTodos(req, res) {
     try {
       const usuarios = await database.Usuario.findAll();
-      return res.status(200).json(usuarios);
+      const tipos = await database.TipoUsuario.findAll();
+
+      let usuarioDTOs = [];
+
+      usuarios.forEach((usuario) => {
+        let tipo = tipos.find((t) => t.id == usuario.tipo_usuario_id);
+
+        usuarioDTOs.push(new usuarioDTO(usuario, tipo));
+      });
+
+      return res.status(200).json(usuarioDTOs);
     }
     catch (erro) {
       return res.status(500).json(erro);
@@ -16,11 +28,14 @@ class UsuarioController {
     const id = req.params.id;
     try {
       const usuario = await database.Usuario.findOne({ where: { id: id } });
+      const tipos = await database.TipoUsuario.findAll();
 
       if (!usuario)
         return res.status(404).json({ error: 'Usuario não encontrado' });
 
-      return res.status(200).json(usuario);
+      let tipo = tipos.find((t) => t.id == usuario.tipo_usuario_id);
+
+      return res.status(200).json(new usuarioDTO(usuario, tipo));
     }
     catch (erro) {
       return res.status(500).json(erro);
@@ -72,10 +87,14 @@ class UsuarioController {
     const email = req.body.email;
     try {
       const usuario = await database.Usuario.findOne({ where: { email: email } });
+      const tipos = await database.TipoUsuario.findAll();
+
       if (!usuario)
         return res.status(404).json({ error: 'Usuario não encontrado' });
 
-      return res.status(200).json({ usuario });
+      let tipo = tipos.find((t) => t.id == usuario.tipo_usuario_id);
+
+      return res.status(200).json({ usuario: new usuarioDTO(usuario, tipo) });
     }
     catch (erro) {
       return res.status(500).json(erro);
@@ -86,7 +105,19 @@ class UsuarioController {
     const tipo_id = req.params.tipo;
     try {
       const usuarios = await database.Usuario.findAll({ where: { tipo_usuario_id: tipo_id } });
-      return res.status(200).json(usuarios);
+      const tipos = await database.TipoUsuario.findAll();
+
+      if (!usuario)
+        return res.status(404).json({ error: 'Usuario não encontrado' });
+
+      let usuarioDTOs = [];
+      usuarios.forEach((usuario) => {
+        let tipo = tipos.find((t) => t.id == usuario.tipo_usuario_id);
+
+        usuarioDTOs.push(new usuarioDTO(usuario, tipo));
+      });
+
+      return res.status(200).json(usuarioDTOs);
     }
     catch (erro) {
       return res.status(500).json(erro);
