@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "alexandre",
-    "password": "NumSey_123",
+    "username": "root",
+    "password": "",
     "database": "sgaa",
     "host": "127.0.0.1",
     "dialect": "mysql"

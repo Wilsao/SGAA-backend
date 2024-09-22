@@ -4,9 +4,9 @@ class Database {
   constructor() {
     this.pool = mysql.createPool({
       host: "localhost",
-      user: "alexandre",
+      user: "root",
       database: "sgaa",
-      password: "NumSey_123",
+      password: "",
     });
   }
 

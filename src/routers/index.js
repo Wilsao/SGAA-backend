@@ -1,5 +1,6 @@
 const express = require('express');
 const auth = require('./AuthRoutes.js');
+const tipousuarios = require('./tipoUsuarioRoutes.js');
 const usuarios = require('./UsuarioRoutes.js');
 const animal = require('./AnimaisRoutes.js');
 const cuidador = require('./CuidadorRoutes.js');
@@ -13,6 +14,7 @@ module.exports = app => {
     express.json(),
     adocao,
     auth,
+    tipousuarios,
     usuarios,
     animal,
     cuidador,
