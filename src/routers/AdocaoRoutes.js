@@ -1,7 +1,6 @@
 const { Router } = require('express');
 const fileUpload = require('express-fileupload');
-const adocaoController = require('../controllers/old/AdocaoController.js');
-const AdocaoController = new adocaoController();
+const AdocaoController = require('../controllers/AdocaoController.js');
 
 const router = Router();
 

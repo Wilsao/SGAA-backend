@@ -1,7 +1,6 @@
 const { Router } = require('express');
-const arrecadacaoController = require('../controllers/old/ArrecadacaoController.js');
+const ArrecadacaoController = require('../controllers/ArrecadacaoController.js');
 const autenticado = require('../middleware/autenticado.js');
-const ArrecadacaoController = new arrecadacaoController();
 
 const router = Router();
 

@@ -1,6 +1,5 @@
 const { Router } = require('express');
-const especieController = require('../controllers/old/EspecieController.js');
-const EspecieController = new especieController();
+const EspecieController = require('../controllers/EspecieController.js');
 const autenticado = require('../middleware/autenticado.js');
 
 const router = Router();
