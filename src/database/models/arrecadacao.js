@@ -14,7 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Arrecadacao.init({
-    nome: DataTypes.STRING
+    nome_evento: DataTypes.STRING,
+    data_evento: DataTypes.DATE,
+    valor_arrecadado: DataTypes.DECIMAL,
+    descricao: DataTypes.STRING,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
+    deletedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Arrecadacao',

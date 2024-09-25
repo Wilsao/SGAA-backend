@@ -10,11 +10,36 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Animal.belongsTo(models.Especie, {
+        foreignKey: 'especie_id'
+      }),
+        Animal.belongsTo(models.Castracao, {
+          foreignKey: 'castracao_id'
+        }),
+        Animal.belongsToMany(models.Pessoa, {
+          through: models.Adocao,
+          foreignKey: 'animal_id',
+          otherKey: 'pessoa_id',
+          as: 'pessoas',
+        });
     }
   }
   Animal.init({
-    nome: DataTypes.STRING
+    nome: DataTypes.STRING,
+    sexo: DataTypes.STRING,
+    pelagem: DataTypes.STRING,
+    deficiencia: DataTypes.STRING,
+    idade: DataTypes.STRING,
+    status: DataTypes.BOOLEAN,
+    numero_chip: DataTypes.STRING,
+    numero_baia: DataTypes.STRING,
+    condicao_resgate: DataTypes.STRING,
+    especie_id: DataTypes.INTEGER,
+    castracao_id: DataTypes.INTEGER,
+    data_nascimento: DataTypes.DATE,
+    data_morte: DataTypes.DATE,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
   }, {
     sequelize,
     modelName: 'Animal',
