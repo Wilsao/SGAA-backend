@@ -12,10 +12,30 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      especie_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'especies',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
+      usuario_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'usuarios',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
       local_evento: {
         type: Sequelize.STRING
       },
-      nome_evento: {
+      descricao: {
         type: Sequelize.STRING
       },
       data_evento: {
@@ -24,8 +44,13 @@ module.exports = {
       sexo: {
         type: Sequelize.STRING
       },
-      quantidade_castrada: {
-        type: Sequelize.STRING
+      quantidade_macho: {
+        defaultValue: 0,
+        type: Sequelize.INTEGER
+      },
+      quantidade_femea: {
+        defaultValue: 0,
+        type: Sequelize.INTEGER
       },
       status: {
         defaultValue: true,

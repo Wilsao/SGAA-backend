@@ -5,6 +5,18 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Adocao extends Model {
     static associate(models) {
+      Adocao.belongsTo(models.Pessoa, {
+        foreignKey: 'pessoa_id',
+        as: 'pessoa'
+      });
+      Adocao.belongsTo(models.Animal, {
+        foreignKey: 'animal_id',
+        as: 'animal'
+      });
+      Adocao.belongsTo(models.status_adocao, {
+        foreignKey: 'status_adocao_id',
+        as: 'status_adocao'
+      });
     }
   }
   Adocao.init({

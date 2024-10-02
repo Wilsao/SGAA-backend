@@ -18,9 +18,6 @@ module.exports = {
       senha: {
         type: Sequelize.STRING
       },
-      cpf: {
-        type: Sequelize.STRING
-      },
       tipo_usuario_id: {
         allowNull: false,
         type: Sequelize.INTEGER,

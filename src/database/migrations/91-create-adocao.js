@@ -9,6 +9,16 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      status_adocao_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'status_adocao',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
       animal_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
@@ -28,6 +38,18 @@ module.exports = {
         }
       },
       data_adocao: {
+        type: Sequelize.DATE
+      },
+      observacao: {
+        type: Sequelize.STRING
+      },
+      data_inicio: {
+        allowNull: true,
+        defaultValue: Sequelize.NOW,
+        type: Sequelize.DATE
+      },
+      data_fim: {
+        allowNull: true,
         type: Sequelize.DATE
       },
       createdAt: {

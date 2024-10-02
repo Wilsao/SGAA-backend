@@ -46,7 +46,15 @@ module.exports = {
       },
       numero: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
+      },
+      complemento: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      ponto_referencia: {
+        allowNull: true,
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
