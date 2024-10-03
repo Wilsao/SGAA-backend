@@ -1,5 +1,6 @@
 'use strict';
 
+const { status } = require('express/lib/response');
 const castracao = require('../models/castracao');
 
 /** @type {import('sequelize-cli').Migration} */
@@ -11,6 +12,16 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
+      },
+      status_animal_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'status_animal',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       especie_id: {
         allowNull: false,
@@ -40,10 +51,6 @@ module.exports = {
       },
       pelagem: {
         type: Sequelize.STRING
-      },
-      status: {
-        defaultValue: true,
-        type: Sequelize.BOOLEAN
       },
       idade: {
         type: Sequelize.STRING

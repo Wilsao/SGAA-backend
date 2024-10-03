@@ -23,11 +23,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Pessoa.init({
-    status: DataTypes.BOOLEAN,
     nome: DataTypes.STRING,
     cpf: DataTypes.STRING,
-    data_envio: DataTypes.DATE,
-    profissao: DataTypes.STRING,
+    sexo: DataTypes.STRING,
+    data_nascimento: DataTypes.DATE,
+    cuidador: DataTypes.BOOLEAN,
+    status: DataTypes.BOOLEAN,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Pessoa',

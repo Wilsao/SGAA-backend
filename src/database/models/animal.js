@@ -10,18 +10,21 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      Animal.belongsTo(models.StatusAnimal, {
+        foreignKey: 'status_animal_id'
+      });
       Animal.belongsTo(models.Especie, {
         foreignKey: 'especie_id'
-      }),
-        Animal.belongsTo(models.Castracao, {
-          foreignKey: 'castracao_id'
-        }),
-        Animal.belongsToMany(models.Pessoa, {
-          through: models.Adocao,
-          foreignKey: 'animal_id',
-          otherKey: 'pessoa_id',
-          as: 'pessoas',
-        });
+      });
+      Animal.belongsTo(models.Castracao, {
+        foreignKey: 'castracao_id'
+      });
+      Animal.belongsToMany(models.Pessoa, {
+        through: models.Adocao,
+        foreignKey: 'animal_id',
+        otherKey: 'pessoa_id',
+        as: 'pessoas',
+      });
     }
   }
   Animal.init({
