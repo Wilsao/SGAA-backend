@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       Castracao.belongsTo(models.Especie, {
         foreignKey: 'especie_id'
       });
-      Pessoa.belongsTo(models.Usuario, {
+      Castracao.belongsTo(models.Usuario, {
         foreignKey: 'usuario_id',
       });
       Castracao.hasMany(models.Animal, {

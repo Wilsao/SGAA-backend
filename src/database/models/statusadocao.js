@@ -15,12 +15,12 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  status_adocao.init({
+  StatusAdocao.init({
     nome: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'StatusAdocao',
     tableName: 'status_adocao'
   });
-  return status_adocao;
+  return StatusAdocao;
 };

@@ -8,6 +8,6 @@ router.get('/especie', EspecieController.obterTodos);
 router.get('/especie/:id', EspecieController.obterPorId);
 router.post('/especie', autenticado, EspecieController.adicionar);
 router.put('/especie/:id', autenticado, EspecieController.atualizar);
-router.delete('/especie/:id', autenticado, EspecieController.excluir);
+router.delete('/especie/:id', autenticado, EspecieController.deletar);
 
 module.exports = router;

@@ -36,6 +36,17 @@ class AuthController {
       return res.status(500).json(erro);
     }
   }
+
+  async Logout(req, res) {
+    try {
+      // Para o logout, podemos simplesmente retornar um status de sucesso e instruir o cliente a remover o token
+      // apos resposta 200, deletar o token, sim é só isso
+      return res.status(200).json({ message: 'Logout realizado com sucesso' });
+    } catch (erro) {
+      return res.status(500).json(erro);
+    }
+  }
+
 }
 
 module.exports = new AuthController();

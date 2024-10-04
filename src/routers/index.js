@@ -8,6 +8,7 @@ const especie = require('./EspecieRoutes.js');
 const castracao = require('./CastracaoRoutes.js');
 const arrecadacao = require('./ArrecadacaoRoutes.js');
 const adocao = require('./AdocaoRoutes.js');
+const pessoa = require('./PessoaRoutes.js');
 
 module.exports = app => {
   app.use(
@@ -21,5 +22,6 @@ module.exports = app => {
     especie,
     castracao,
     arrecadacao,
+    pessoa
   )
 }

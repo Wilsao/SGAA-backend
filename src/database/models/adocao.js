@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'animal_id',
         as: 'animal'
       });
-      Adocao.belongsTo(models.status_adocao, {
+      Adocao.belongsTo(models.StatusAdocao, {
         foreignKey: 'status_adocao_id',
         as: 'status_adocao'
       });

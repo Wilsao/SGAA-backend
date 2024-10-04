@@ -8,7 +8,7 @@ router.get('/arrecadacao', autenticado, ArrecadacaoController.obterTodos);
 router.get('/arrecadacao/:id', autenticado, ArrecadacaoController.obterPorId);
 router.post('/arrecadacao', autenticado, ArrecadacaoController.adicionar);
 router.put('/arrecadacao/:id', autenticado, ArrecadacaoController.atualizar);
-router.delete('/arrecadacao/:id', autenticado, ArrecadacaoController.excluir);
+router.delete('/arrecadacao/:id', autenticado, ArrecadacaoController.deletar);
 router.get('/arrecadacao/filtrar/:termobusca', autenticado, ArrecadacaoController.filtrar);
 router.get('/arrecadacao/filtrarPorAno/:ano', autenticado, ArrecadacaoController.filtrarPorAno);
 module.exports = router;
