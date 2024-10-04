@@ -177,5 +177,7 @@ router.put('/usuario/:id/', autenticado, UsuarioController.atualizar);
  */
 router.delete('/usuario/:id', autenticado, UsuarioController.deletar);
 
+router.post('/usuario/nova-senha', UsuarioController.definirNovaSenha);
+router.post('/usuario/definir-resposta', autenticado, UsuarioController.definirResposta);
 
 module.exports = router;  

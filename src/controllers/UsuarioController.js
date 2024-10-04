@@ -7,17 +7,11 @@ class UsuarioController {
   async obterTodos(req, res) {
     try {
       const usuarios = await database.Usuario.findAll();
-      const tipos = await database.TipoUsuario.findAll();
 
-      let usuarioDTOs = [];
+      if (!usuarios)
+        return res.status(404).json({ error: 'Nenhum usuario foi encontrado' });
 
-      usuarios.forEach((usuario) => {
-        let tipo = tipos.find((t) => t.id == usuario.tipo_usuario_id);
-
-        usuarioDTOs.push(new usuarioDTO(usuario, tipo));
-      });
-
-      return res.status(200).json(usuarioDTOs);
+      return res.status(200).json(usuarios);
     }
     catch (erro) {
       return res.status(500).json(erro);
@@ -28,14 +22,11 @@ class UsuarioController {
     const id = req.params.id;
     try {
       const usuario = await database.Usuario.findOne({ where: { id: id } });
-      const tipos = await database.TipoUsuario.findAll();
 
       if (!usuario)
         return res.status(404).json({ error: 'Usuario não encontrado' });
 
-      let tipo = tipos.find((t) => t.id == usuario.tipo_usuario_id);
-
-      return res.status(200).json(new usuarioDTO(usuario, tipo));
+      return res.status(200).json(usuario);
     }
     catch (erro) {
       return res.status(500).json(erro);
@@ -45,15 +36,23 @@ class UsuarioController {
   async adicionar(req, res) {
     const dados = req.body;
     try {
-      const hashSenha = await hash(dados.senha, 10);
-      const id = await database.Usuario.create({
-        nome: dados.nome,
-        email: dados.email,
-        senha: hashSenha,
-        tipo_usuario_id: 2
-      });
+      let usuario = await database.Usuario.findOne({ where: { id: dados.usuario_id } });
+      let tipousuario = await database.TipoUsuario.findOne({ where: { nome: "Administrador" } });
 
-      return res.status(201).json({ message: 'Usuario criado com sucesso', id });
+      if (usuario && usuario.tipo_usuario_id == tipousuario.id) {
+        const hashSenha = await hash(dados.senha, 10);
+
+        const id = await database.Usuario.create({
+          nome: dados.nome,
+          email: dados.email,
+          senha: hashSenha,
+          tipo_usuario_id: dados.tipo_usuario_id
+        });
+
+        return res.status(201).json({ message: 'Usuario criado com sucesso', id });
+      }
+
+      return res.status(401).json({ error: 'Usuario não autorizado a realizar esta ação' });
     }
     catch (erro) {
       return res.status(500).json(erro);
@@ -74,9 +73,28 @@ class UsuarioController {
 
   async deletar(req, res) {
     const id = req.params.id;
+    const usuario_id = req.params.usuario_id;
     try {
-      await database.Usuario.destroy({ where: { id: id } });
-      return res.status(200).json({ message: 'Usuario excluido com sucesso' });
+      let usuario = await database.Usuario.findOne({ where: { id: usuario_id } });
+      let tipousuario = await database.TipoUsuario.findOne({ where: { nome: "Administrador" } });
+
+      if (usuario && usuario.tipo_usuario_id == tipousuario.id) {
+
+        let usuarioExcluir = await database.Usuario.findOne({ where: { id: id } });
+
+        if (!usuarioExcluir)
+          return res.status(404).json({ error: 'Usuario não encontrado' });
+
+        let qtdeAdmins = await database.Usuario.count({ where: { tipo_usuario_id: tipousuario.id } });
+        if (usuarioExcluir.tipo_usuario_id == tipousuario.id && qtdeAdmins == 1)
+          return res.status(400).json({ error: 'É necessario que exista pelo menos um administrador' });
+
+        await usuarioExcluir.destroy();
+
+        return res.status(200).json({ message: 'Usuario excluido com sucesso' });
+      }
+
+      return res.status(401).json({ error: 'Usuario não autorizado a realizar esta ação' });
     }
     catch (erro) {
       return res.status(500).json(erro);
@@ -87,14 +105,11 @@ class UsuarioController {
     const email = req.body.email;
     try {
       const usuario = await database.Usuario.findOne({ where: { email: email } });
-      const tipos = await database.TipoUsuario.findAll();
 
       if (!usuario)
         return res.status(404).json({ error: 'Usuario não encontrado' });
 
-      let tipo = tipos.find((t) => t.id == usuario.tipo_usuario_id);
-
-      return res.status(200).json({ usuario: new usuarioDTO(usuario, tipo) });
+      return res.status(200).json(usuario);
     }
     catch (erro) {
       return res.status(500).json(erro);
@@ -105,19 +120,11 @@ class UsuarioController {
     const tipo_id = req.params.tipo;
     try {
       const usuarios = await database.Usuario.findAll({ where: { tipo_usuario_id: tipo_id } });
-      const tipos = await database.TipoUsuario.findAll();
 
-      if (!usuario)
+      if (!usuarios)
         return res.status(404).json({ error: 'Usuario não encontrado' });
 
-      let usuarioDTOs = [];
-      usuarios.forEach((usuario) => {
-        let tipo = tipos.find((t) => t.id == usuario.tipo_usuario_id);
-
-        usuarioDTOs.push(new usuarioDTO(usuario, tipo));
-      });
-
-      return res.status(200).json(usuarioDTOs);
+      return res.status(200).json(usuarios);
     }
     catch (erro) {
       return res.status(500).json(erro);
@@ -158,13 +165,41 @@ class UsuarioController {
     }
   }
 
-  async obterPorToken(req, res) {
-    const token = req.body.token;
+  async definirResposta(req, res) {
+    const id = req.body.id;
+    const pergunta = req.body.pergunta;
+    const resposta = req.body.resposta;
+
     try {
-      const usuario = await database.Usuario.findOne({ where: { token: token } });
-      if (!usuario)
-        return res.status(404).json({ error: 'Usuario não encontrado' });
-      return res.status(200).json({ token: usuario.token });
+      await database.Usuario.findOne({ where: { id: id } });
+
+      await database.Usuario.update(
+        { pergunta: pergunta, resposta: resposta },
+        { where: { id: id } }
+      );
+
+      return res.status(200).json({ message: 'Resposta definida com sucesso' });
+    }
+    catch (erro) {
+      return res.status(500).json(erro);
+    }
+  }
+
+  async definirNovaSenha(req, res) {
+    const id = req.body.id;
+    const resposta = req.body.resposta;
+    const novaSenha = req.body.novaSenha;
+    try {
+      const usuario = await database.Usuario.findOne({ where: { id: id } });
+
+      if (resposta === usuario.resposta) {
+        const hashNovaSenha = await hash(novaSenha, 10);
+        await database.Usuario.update({ senha: hashNovaSenha }, { where: { id: id } });
+
+        return res.status(200).json({ message: 'Senha alterada com sucesso' });
+      }
+
+      return res.status(400).json({ error: 'Resposta incorreta' });
     }
     catch (erro) {
       return res.status(500).json(erro);

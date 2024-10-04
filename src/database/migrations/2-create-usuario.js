@@ -30,6 +30,14 @@ module.exports = {
         defaultValue: true,
         type: Sequelize.BOOLEAN
       },
+      pergunta: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      resposta: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         defaultValue: Sequelize.NOW,
