@@ -7,12 +7,15 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Pessoa.hasMany(models.Endereco, {
         foreignKey: 'pessoa_id',
+        as: 'enderecos'
       });
       Pessoa.hasMany(models.Contato, {
         foreignKey: 'pessoa_id',
+        as: 'contatos'
       });
       Pessoa.belongsTo(models.Usuario, {
         foreignKey: 'usuario_id',
+        as: 'usuario'
       });
       Pessoa.belongsToMany(models.Animal, {
         through: models.Adocao,

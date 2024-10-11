@@ -17,7 +17,23 @@ class PessoaController {
   async obterPorId(req, res) {
     const id = req.params.id;
     try {
-      const pessoa = await database.Pessoa.findOne({ where: { id: id } });
+      const pessoa = await database.Pessoa.findOne({
+        where: { id: id },
+        // include: [
+        //   {
+        //     model: Contato,
+        //     as: 'contatos',
+        //     where: { status: true },
+        //     required: false
+        //   },
+        //   {
+        //     model: Endereco,
+        //     as: 'enderecos',
+        //     where: { status: true },
+        //     required: false
+        //   }
+        // ]
+      });
 
       if (!pessoa)
         return res.status(404).json({ error: 'Pessoa não encontrada' });
@@ -30,7 +46,7 @@ class PessoaController {
   }
 
   async obterPorCpf(req, res) {
-    const cpf = req.params.cpf;
+    const cpf = req.body.cpf;
     try {
       const pessoa = await database.Pessoa.findOne({ where: { cpf: cpf } });
       if (!pessoa)
@@ -46,6 +62,32 @@ class PessoaController {
     const pessoa = req.body;
     try {
       const novaPessoa = await database.Pessoa.create(pessoa);
+
+      if (!novaPessoa)
+        return res.status(500).json({ error: 'Não foi possivel cadastrar pessoa' });
+
+      if (pessoa.contatos && pessoa.contatos.length > 0) {
+        let contatos = pessoa.contatos.map(contato => {
+          return {
+            ...contato,
+            pessoa_id: novaPessoa.id
+          }
+        });
+
+        novaPessoa.contatos = await database.Contato.bulkCreate(contatos);
+      }
+
+      if (pessoa.enderecos && pessoa.enderecos.length > 0) {
+        let enderecos = pessoa.enderecos.map(endereco => {
+          return {
+            ...endereco,
+            pessoa_id: novaPessoa.id
+          }
+        });
+
+        novaPessoa.enderecos = await database.Endereco.bulkCreate(enderecos);
+      }
+
       return res.status(200).json(novaPessoa);
     }
     catch (erro) {
