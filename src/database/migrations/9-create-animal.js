@@ -49,6 +49,9 @@ module.exports = {
       sexo: {
         type: Sequelize.STRING
       },
+      deficiencia: {
+        type: Sequelize.STRING
+      },
       pelagem: {
         type: Sequelize.STRING
       },
@@ -66,6 +69,14 @@ module.exports = {
       },
       data_nascimento: {
         type: Sequelize.DATE
+      },
+      data_morte: {
+        allowNull: true,
+        type: Sequelize.DATE
+      },
+      status: {
+        defaultValue: true,
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
