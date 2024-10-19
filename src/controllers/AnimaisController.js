@@ -33,8 +33,7 @@ class AnimaisController {
   async adicionar(req, res) {
     const dados = req.body;
     try {
-      const id = await database.Animal.create(dados);
-      const animal = await database.Animal.findOne({ where: { id: id } });
+      const animal = await database.Animal.create(dados);
       return res.status(201).json(animal);
     }
     catch (erro) {
