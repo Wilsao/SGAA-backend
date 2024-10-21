@@ -269,9 +269,19 @@ const router = Router();
 router.get('/pessoa/', autenticado, PessoaController.obterTodos);
 router.get('/pessoa/cpf', autenticado, PessoaController.obterPorCpf);
 router.get('/pessoa/:id', autenticado, PessoaController.obterPorId);
-router.post('/pessoa/', autenticado, PessoaController.adicionar);
+router.post('/pessoa/', PessoaController.adicionar);
 router.put('/pessoa/:id/', autenticado, PessoaController.atualizar);
 router.delete('/pessoa/:id', autenticado, PessoaController.deletar);
 router.get('/pessoa/endereco/:id', autenticado, PessoaController.obterEnderecos);
+
+router.get('/pessoa/endereco/:id', PessoaController.obterEnderecos);
+router.post('/pessoa/:id/endereco/', PessoaController.addEndereco);
+router.put('/pessoa/:id/endereco/:enderecoId', PessoaController.atualizarEndereco);
+router.delete('/pessoa/:id/endereco/:enderecoId', PessoaController.removeEndereco);
+
+router.get('/pessoa/contato/:id', PessoaController.obterContatos);
+router.post('/pessoa/:id/contato/', PessoaController.addContato);
+router.put('/pessoa/:id/contato/:contatoId', PessoaController.atualizarContato);
+router.delete('/pessoa/:id/contato/:contatoId', PessoaController.removeContato);
 
 module.exports = router;  

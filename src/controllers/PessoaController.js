@@ -8,8 +8,7 @@ class PessoaController {
         return res.status(404).json({ error: 'Pessoas não encontradas' });
 
       return res.status(200).json(pessoas);
-    }
-    catch (erro) {
+    } catch (erro) {
       return res.status(500).json(erro);
     }
   }
@@ -19,28 +18,13 @@ class PessoaController {
     try {
       const pessoa = await database.Pessoa.findOne({
         where: { id: id },
-        // include: [
-        //   {
-        //     model: Contato,
-        //     as: 'contatos',
-        //     where: { status: true },
-        //     required: false
-        //   },
-        //   {
-        //     model: Endereco,
-        //     as: 'enderecos',
-        //     where: { status: true },
-        //     required: false
-        //   }
-        // ]
       });
 
       if (!pessoa)
         return res.status(404).json({ error: 'Pessoa não encontrada' });
 
       return res.status(200).json(pessoa);
-    }
-    catch (erro) {
+    } catch (erro) {
       return res.status(500).json(erro);
     }
   }
@@ -52,8 +36,7 @@ class PessoaController {
       if (!pessoa)
         return res.status(404).json({ error: 'Pessoa não encontrada' });
       return res.status(200).json(pessoa);
-    }
-    catch (erro) {
+    } catch (erro) {
       return res.status(500).json(erro);
     }
   }
@@ -64,33 +47,32 @@ class PessoaController {
       const novaPessoa = await database.Pessoa.create(pessoa);
 
       if (!novaPessoa)
-        return res.status(500).json({ error: 'Não foi possivel cadastrar pessoa' });
+        return res.status(500).json({ error: 'Não foi possível cadastrar pessoa' });
 
       if (pessoa.contatos && pessoa.contatos.length > 0) {
-        let contatos = pessoa.contatos.map(contato => {
+        let contatos = pessoa.contatos.map((contato) => {
           return {
             ...contato,
-            pessoa_id: novaPessoa.id
-          }
+            pessoa_id: novaPessoa.id,
+          };
         });
 
         novaPessoa.contatos = await database.Contato.bulkCreate(contatos);
       }
 
       if (pessoa.enderecos && pessoa.enderecos.length > 0) {
-        let enderecos = pessoa.enderecos.map(endereco => {
+        let enderecos = pessoa.enderecos.map((endereco) => {
           return {
             ...endereco,
-            pessoa_id: novaPessoa.id
-          }
+            pessoa_id: novaPessoa.id,
+          };
         });
 
         novaPessoa.enderecos = await database.Endereco.bulkCreate(enderecos);
       }
 
       return res.status(200).json(novaPessoa);
-    }
-    catch (erro) {
+    } catch (erro) {
       return res.status(500).json(erro);
     }
   }
@@ -101,12 +83,12 @@ class PessoaController {
     try {
       await database.Pessoa.update(pessoa, { where: { id: id } });
       return res.status(200).json({ message: 'Pessoa atualizada com sucesso' });
-    }
-    catch (erro) {
+    } catch (erro) {
       return res.status(500).json(erro);
     }
   }
 
+  // Obtém todos os endereços de uma pessoa
   async obterEnderecos(req, res) {
     const pessoaId = req.params.id;
     try {
@@ -116,24 +98,15 @@ class PessoaController {
 
       const enderecos = await database.Endereco.findAll({ where: { pessoa_id: pessoaId } });
       return res.status(200).json(enderecos);
-    }
-    catch (erro) {
+    } catch (erro) {
       return res.status(500).json(erro);
     }
   }
 
+  // Adiciona um novo endereço a uma pessoa
   async addEndereco(req, res) {
     const pessoaId = req.params.id;
-    const {
-      estado,
-      cep,
-      cidade,
-      rua,
-      bairro,
-      numero,
-      complemento,
-      status
-    } = req.body;
+    const enderecoData = req.body;
 
     try {
       const pessoa = await database.Pessoa.findByPk(pessoaId);
@@ -141,15 +114,8 @@ class PessoaController {
         return res.status(404).json({ message: 'Pessoa não encontrada' });
 
       const novoEndereco = await database.Endereco.create({
-        estado,
-        cep,
-        cidade,
-        rua,
-        bairro,
-        numero,
-        complemento,
-        status,
-        pessoa_id: pessoaId
+        ...enderecoData,
+        pessoa_id: pessoaId,
       });
 
       return res.status(200).json({ message: 'Endereço adicionado com sucesso', endereco: novoEndereco });
@@ -158,21 +124,42 @@ class PessoaController {
     }
   }
 
+  // Atualiza um endereço existente
+  async atualizarEndereco(req, res) {
+    const pessoaId = req.params.id;
+    const enderecoId = req.params.enderecoId;
+    const enderecoData = req.body;
+
+    try {
+      const endereco = await database.Endereco.findOne({
+        where: {
+          id: enderecoId,
+          pessoa_id: pessoaId,
+        },
+      });
+
+      if (!endereco)
+        return res.status(404).json({ message: 'Endereço não encontrado ou não está associado à pessoa' });
+
+      await endereco.update(enderecoData);
+
+      return res.status(200).json({ message: 'Endereço atualizado com sucesso', endereco });
+    } catch (erro) {
+      return res.status(500).json({ error: erro.message });
+    }
+  }
+
+  // Remove um endereço de uma pessoa
   async removeEndereco(req, res) {
     const pessoaId = req.params.id;
     const enderecoId = req.params.enderecoId;
 
     try {
-      const pessoa = await database.Pessoa.findByPk(pessoaId);
-
-      if (!pessoa)
-        return res.status(404).json({ message: 'Pessoa não encontrada' });
-
       const endereco = await database.Endereco.findOne({
         where: {
           id: enderecoId,
-          pessoa_id: pessoaId
-        }
+          pessoa_id: pessoaId,
+        },
       });
 
       if (!endereco)
@@ -186,6 +173,7 @@ class PessoaController {
     }
   }
 
+  // Obtém todos os contatos de uma pessoa
   async obterContatos(req, res) {
     const pessoaId = req.params.id;
     try {
@@ -196,15 +184,15 @@ class PessoaController {
 
       const contatos = await database.Contato.findAll({ where: { pessoa_id: pessoaId } });
       return res.status(200).json(contatos);
-    }
-    catch (erro) {
+    } catch (erro) {
       return res.status(500).json(erro);
     }
   }
 
+  // Adiciona um novo contato a uma pessoa
   async addContato(req, res) {
     const pessoaId = req.params.id;
-    const { tipo, valor, status } = req.body;
+    const contatoData = req.body;
 
     try {
       const pessoa = await database.Pessoa.findByPk(pessoaId);
@@ -212,33 +200,52 @@ class PessoaController {
         return res.status(404).json({ error: 'Pessoa não encontrada' });
 
       const novoContato = await database.Contato.create({
-        tipo,
-        valor,
-        status,
-        pessoa_id: pessoaId
+        ...contatoData,
+        pessoa_id: pessoaId,
       });
 
-      return res.status(200).json({ message: 'Contato adicionado com sucesso' });
-    }
-    catch (erro) {
+      return res.status(200).json({ message: 'Contato adicionado com sucesso', contato: novoContato });
+    } catch (erro) {
       return res.status(500).json(erro);
     }
   }
 
+  // Atualiza um contato existente
+  async atualizarContato(req, res) {
+    const pessoaId = req.params.id;
+    const contatoId = req.params.contatoId;
+    const contatoData = req.body;
+
+    try {
+      const contato = await database.Contato.findOne({
+        where: {
+          id: contatoId,
+          pessoa_id: pessoaId,
+        },
+      });
+
+      if (!contato)
+        return res.status(404).json({ message: 'Contato não encontrado ou não está associado à pessoa' });
+
+      await contato.update(contatoData);
+
+      return res.status(200).json({ message: 'Contato atualizado com sucesso', contato });
+    } catch (erro) {
+      return res.status(500).json({ error: erro.message });
+    }
+  }
+
+  // Remove um contato de uma pessoa
   async removeContato(req, res) {
     const pessoaId = req.params.id;
     const contatoId = req.params.contatoId;
 
     try {
-      const pessoa = await database.Pessoa.findByPk(pessoaId);
-      if (!pessoa)
-        return res.status(404).json({ message: 'Pessoa não encontrada' });
-
       const contato = await database.Contato.findOne({
         where: {
           id: contatoId,
-          pessoa_id: pessoaId
-        }
+          pessoa_id: pessoaId,
+        },
       });
 
       if (!contato)
@@ -256,9 +263,8 @@ class PessoaController {
     const id = req.params.id;
     try {
       await database.Pessoa.destroy({ where: { id: id } });
-      return res.status(200).json({ message: 'Pessoa excluida com sucesso' });
-    }
-    catch (erro) {
+      return res.status(200).json({ message: 'Pessoa excluída com sucesso' });
+    } catch (erro) {
       return res.status(500).json(erro);
     }
   }

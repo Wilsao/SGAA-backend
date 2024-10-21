@@ -34,7 +34,7 @@ router.get('/usuario/', autenticado, UsuarioController.obterTodos);
  *       404:
  *         description: Usuário não encontrado
  */
-router.post('/usuario/email/', autenticado, UsuarioController.obterPorEmail);
+router.post('/usuario/email/', UsuarioController.obterPorEmail);
 
 /**
  * @swagger
