@@ -3,7 +3,6 @@ const auth = require('./AuthRoutes.js');
 const tipousuarios = require('./tipoUsuarioRoutes.js');
 const usuarios = require('./UsuarioRoutes.js');
 const animal = require('./AnimaisRoutes.js');
-const cuidador = require('./CuidadorRoutes.js');
 const especie = require('./EspecieRoutes.js');
 const castracao = require('./CastracaoRoutes.js');
 const arrecadacao = require('./ArrecadacaoRoutes.js');
@@ -18,7 +17,7 @@ module.exports = app => {
     tipousuarios,
     usuarios,
     animal,
-    cuidador,
+    // cuidador,
     especie,
     castracao,
     arrecadacao,

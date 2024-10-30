@@ -22,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
     descricao: DataTypes.STRING,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
-    deletedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Arrecadacao',

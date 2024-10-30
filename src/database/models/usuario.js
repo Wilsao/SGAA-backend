@@ -1,31 +1,134 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Usuario extends Model {
     static associate(models) {
       Usuario.belongsTo(models.TipoUsuario, {
-        foreignKey: 'tipo_usuario_id'
+        foreignKey: "tipo_usuario_id",
       });
     }
-  }
-  Usuario.init({
-    nome: DataTypes.STRING,
-    email: DataTypes.STRING,
-    senha: DataTypes.STRING,
-    status: DataTypes.BOOLEAN,
-    pergunta: DataTypes.STRING,
-    resposta: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'Usuario',
-    tableName: 'usuarios',
-    defaultScope: {
-      attributes: {
-        exclude: ['senha']
+
+    async isAdmin() {
+      const tipoAdmin = await sequelize.models.TipoUsuario.findOne({
+        where: { nome: "Administrador" },
+      });
+      return this.tipo_usuario_id === tipoAdmin.id;
+    }
+
+    static async validarExclusao(usuarioId, usuarioExcluindoId) {
+      if (usuarioId === usuarioExcluindoId) {
+        throw new Error("Você não pode excluir a si mesmo.");
+      }
+
+      const usuarioExcluindo = await Usuario.findOne({
+        where: { id: usuarioExcluindoId },
+      });
+
+      if (!usuarioExcluindo || !(await usuarioExcluindo.isAdmin())) {
+        throw new Error("Usuário não autorizado para exclusão.");
+      }
+
+      const tipoAdmin = await sequelize.models.TipoUsuario.findOne({
+        where: { nome: "Administrador" },
+      });
+
+      const qtdeAdmins = await Usuario.count({
+        where: { tipo_usuario_id: tipoAdmin.id },
+      });
+
+      if (qtdeAdmins === 1 && usuarioId === usuarioExcluindoId) {
+        throw new Error("É necessário que exista pelo menos um administrador.");
       }
     }
-  });
+  }
+
+  Usuario.init(
+    {
+      nome: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: {
+            args: [3, 100],
+            msg: "O nome deve ter entre 3 e 100 caracteres.",
+          },
+        },
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: {
+          args: true,
+          msg: "Esse e-mail já está em uso.",
+        },
+        validate: {
+          isEmail: {
+            msg: "O e-mail deve ser um endereço de e-mail válido.",
+          },
+          notEmpty: {
+            msg: "O e-mail não pode estar vazio.",
+          },
+        },
+      },
+      senha: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: {
+            args: [6, 100],
+            msg: "A senha deve ter entre 6 e 100 caracteres.",
+          },
+        },
+      },
+      status: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
+      pergunta: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      resposta: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+    },
+    {
+      sequelize,
+      modelName: "Usuario",
+      tableName: "usuarios",
+      defaultScope: {
+        attributes: {
+          exclude: ["senha"],
+        },
+      },
+      hooks: {
+        async beforeCreate(usuario) {
+          const existingUser = await Usuario.findOne({
+            where: { email: usuario.email },
+          });
+          if (existingUser) {
+            throw new Error("Já existe um usuário com esse e-mail.");
+          }
+        },
+        async beforeUpdate(usuario) {
+          if (usuario.changed("email")) {
+            const existingUser = await Usuario.findOne({
+              where: {
+                email: usuario.email,
+                id: { [sequelize.Op.ne]: usuario.id },
+              },
+            });
+            if (existingUser) {
+              throw new Error("Esse e-mail já está em uso por outro usuário.");
+            }
+          }
+        },
+      },
+    }
+  );
+
   return Usuario;
 };
