@@ -285,6 +285,8 @@ router.delete(
   PessoaController.removeEndereco
 ); // ESTÁ NO POSTMAN (Deletar um endereço de uma pessoa  - testado - com validações)
 
+
+
 //ROTAS **NÃO** AUTENTICADAS
 
 //pessoas

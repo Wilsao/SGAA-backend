@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('adocoes', {
+    await queryInterface.createTable("adocoes", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -13,37 +13,39 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'status_adocao',
-          key: 'id',
+          model: "status_adocao",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       animal_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'animais',
-          key: 'id',
+          model: "animais",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       pessoa_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'pessoas', 
-          key: 'id',
+          model: "pessoas",
+          key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       data_adocao: {
         type: Sequelize.DATE,
-        allowNull: true, 
+        allowNull: true,
       },
       observacao: {
         type: Sequelize.STRING,
-        allowNull: true, 
+        allowNull: true,
       },
       data_inicio: {
         allowNull: true,
@@ -68,6 +70,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('adocoes');
-  }
+    await queryInterface.dropTable("adocoes");
+  },
 };

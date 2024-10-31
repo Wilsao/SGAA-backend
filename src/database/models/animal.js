@@ -14,11 +14,6 @@ module.exports = (sequelize, DataTypes) => {
         as: "especie",
         allowNull: false,
       });
-      Animal.belongsTo(models.Castracao, {
-        foreignKey: "castracao_id",
-        as: "castracao",
-        allowNull: false,
-      });
       Animal.belongsToMany(models.Pessoa, {
         through: models.Adocao,
         foreignKey: "animal_id",
@@ -45,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      deficiencia: DataTypes.STRING, 
+      deficiencia: DataTypes.STRING,
       data_ocorrencia: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -54,31 +49,14 @@ module.exports = (sequelize, DataTypes) => {
       numero_baia: DataTypes.STRING,
       numero_chip: {
         type: DataTypes.STRING,
-        unique: true, 
+        unique: true,
       },
       condicao_resgate: DataTypes.STRING,
-      cuidador: DataTypes.STRING,
-      especie_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Especies", 
-          key: "id",
-        },
-      },
-      castracao_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Castracao", 
-          key: "id",
-        },
-      },
       status_animal_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "StatusAnimal", 
+          model: "StatusAnimal",
           key: "id",
         },
       },

@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     data_adocao: DataTypes.DATE,
     observacao: DataTypes.STRING,
     data_inicio: DataTypes.DATE,
-    data_inicio: DataTypes.DATE,
+    data_fim: DataTypes.DATE,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE
   }, {

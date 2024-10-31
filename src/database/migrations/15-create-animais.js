@@ -30,15 +30,6 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      cuidador_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'pessoas',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      },
       nome: {
         type: Sequelize.STRING,
         allowNull: false,
