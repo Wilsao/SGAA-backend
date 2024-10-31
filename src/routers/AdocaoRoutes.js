@@ -9,9 +9,11 @@ router.use(fileUpload());
 // Rotas para formulários de adoção
 //ROTAS **NÃO** AUTENTICADAS
 router.get('/adocao', AdocaoController.obterTodos);  // ESTÁ NO POSTMAN (Listar adocoes - testado - com validações)
-router.post('/adocao', AdocaoController.adicionar);
-router.get('/adocao/:id', AdocaoController.obterPorId);
-router.put('/adocao/:id', AdocaoController.atualizar);
-router.delete('/adocao/:id', AdocaoController.excluir);
+router.get('/adocao/:id', AdocaoController.obterPorId); // ESTÁ NO POSTMAN (Buscar adocao por ID - testado - com validações)
+router.put('/adocao/:id', AdocaoController.atualizar); // ESTÁ NO POSTMAN (Editar adocao - testado - com validações)
+router.delete('/adocao/:id', AdocaoController.excluir); 
+
+router.post('/adocao', AdocaoController.adicionar); // ERROOOOO >>> ESTOU RECEBENDO UM ERRO QUE PESSOA_ID NÃO PODE SER NULL - MAS NAO ESTOU MANDANDO NULL.. 
+
 
 module.exports = router;

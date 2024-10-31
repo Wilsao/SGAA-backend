@@ -17,7 +17,6 @@ module.exports = app => {
     tipousuarios,
     usuarios,
     animal,
-    // cuidador,
     especie,
     castracao,
     arrecadacao,
