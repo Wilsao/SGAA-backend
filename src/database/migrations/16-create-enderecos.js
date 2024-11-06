@@ -12,7 +12,7 @@ module.exports = {
       pessoa_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'pessoas', 
+          model: 'pessoas',
           key: 'id',
         },
       },
@@ -56,7 +56,7 @@ module.exports = {
         defaultValue: Sequelize.NOW,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
       },

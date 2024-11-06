@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'tipos_usuarios',
-          key: 'id', 
+          key: 'id',
         },
       },
       nome: {
@@ -23,7 +23,7 @@ module.exports = {
       email: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true, 
+        unique: true,
       },
       senha: {
         type: Sequelize.STRING,
@@ -48,7 +48,7 @@ module.exports = {
         defaultValue: Sequelize.NOW,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
       },

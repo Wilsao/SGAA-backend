@@ -47,7 +47,8 @@ module.exports = {
       },
       data_ocorrencia: {
         type: Sequelize.DATE,
-        allowNull: false,
+        allowNull: true,
+        defaultValue: Sequelize.NOW
       },
       data_nascimento_aproximada: {
         type: Sequelize.DATE,

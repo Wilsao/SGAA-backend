@@ -11,13 +11,13 @@ module.exports = {
       },
       nome: {
         type: Sequelize.STRING,
-        allowNull: false, 
+        allowNull: false,
         unique: true,
       },
       status: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: true, 
+        defaultValue: true,
       },
       createdAt: {
         allowNull: false,
@@ -25,7 +25,7 @@ module.exports = {
         defaultValue: Sequelize.NOW,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
       },

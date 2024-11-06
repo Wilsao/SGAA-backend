@@ -36,11 +36,11 @@ module.exports = {
       },
       cuidador: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false, 
+        defaultValue: false,
       },
       status: {
         type: Sequelize.BOOLEAN,
-        defaultValue: true, 
+        defaultValue: true,
       },
       createdAt: {
         allowNull: false,
@@ -48,7 +48,7 @@ module.exports = {
         defaultValue: Sequelize.NOW,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
       },

@@ -2,31 +2,39 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('contatos', {
+    await queryInterface.createTable('cuidados', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
-      pessoa_id: {
+      animal_id: {
+        allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'pessoas',
-          key: 'id',
+          model: "animais",
+          key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
+      titulo: {
+        type: Sequelize.STRING
       },
       status: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: true,
-      },
-      tipo: {
-        type: Sequelize.ENUM('celular', 'telefone', 'whatsapp'),
+        type: Sequelize.ENUM('pendente', 'em_progresso', 'concluida'),
         allowNull: false,
+        defaultValue: 'pendente',
       },
-      valor: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      descricao: {
+        type: Sequelize.STRING
+      },
+      data_inicio: {
+        type: Sequelize.DATE
+      },
+      data_fim: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -37,11 +45,10 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
-      },
+      }
     });
   },
-
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('contatos');
-  },
+    await queryInterface.dropTable('cuidados');
+  }
 };
