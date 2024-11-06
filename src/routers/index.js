@@ -9,6 +9,7 @@ const arrecadacao = require('./ArrecadacaoRoutes.js');
 const adocao = require('./AdocaoRoutes.js');
 const pessoa = require('./PessoaRoutes.js');
 const cuidado = require('./CuidadoRoutes.js');
+const observacao = require('./ObservacaoRoutes.js');
 
 module.exports = app => {
   app.use(
@@ -22,6 +23,7 @@ module.exports = app => {
     castracao,
     arrecadacao,
     pessoa,
-    cuidado
+    cuidado,
+    observacao
   )
 }

@@ -26,8 +26,8 @@ module.exports = (sequelize, DataTypes) => {
     descricao: DataTypes.STRING,
     data_inicio: DataTypes.DATE,
     data_fim: DataTypes.DATE,
-    created_at: DataTypes.DATE,
-    updated_at: DataTypes.DATE
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Observacao',
