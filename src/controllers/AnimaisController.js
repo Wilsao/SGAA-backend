@@ -110,7 +110,7 @@ class AnimaisController {
 
       // Consulta o banco de dados para obter as imagens associadas ao animal_id
       const imagens = await database.Imagem.findAll({ where: { animal_id: animal_id } });
-      if (imagens) {
+      if (imagens.length > 0) {
         // Extrai os nomes dos arquivos salvos no banco
         const nomesArquivosBanco = imagens.map(image => image.key);
 
