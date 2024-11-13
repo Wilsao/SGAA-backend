@@ -1,11 +1,6 @@
-const { Router } = require("express");
-const fileUpload = require("express-fileupload");
+const router = require("express").Router();
 const AnimalController = require("../controllers/AnimaisController.js");
 const autenticado = require("../middleware/autenticado.js");
-
-const router = Router();
-
-router.use(fileUpload());
 
 //ROTAS AUTENTICADAS
 router.post("/animal", autenticado, AnimalController.adicionar); // ESTÁ NO POSTMAN (Cadastrar animal - testado - com validações)

@@ -58,8 +58,8 @@ class AnimaisController {
         return res.status(404).json({ mensagem: "Animal não encontrado." });
       }
       return res.status(200).json({ message: "Animal excluido com sucesso" });
-    } catch (erro) {
-      return res.status(500).json(erro);
+    } catch (error) {
+      return res.status(500).json("message: " + error.errors[0].message);
     }
   }
 
@@ -82,10 +82,39 @@ class AnimaisController {
         return res.status(404).json({ error: "Nenhum animal encontrado" });
 
       return res.status(200).json(animais);
-    } catch (erro) {
-      return res.status(500).json(erro);
+    } catch (error) {
+      return res.status(500).json("message: " + error.errors[0].message);
     }
   }
+
+  async adicionarImagens(req, res) {
+    try {
+      const files = {
+        animal_id: req.params.animal_id,
+        nome: req.file.originalname,
+        key: req.file.filename
+      };
+
+      const images = await database.Imagem.create(files);
+      return res.status(201).json(images);
+    } catch (error) {
+      return res.status(500).json("message: " + error.errors[0].message);
+    }
+  }
+
+  // async ObterImagensPorAnimalId(req, res) {
+  //   const id = req.param.id;
+  //   try {
+  //     const files = database.Imagem.findAll({ where: { animal_id: id } });
+
+  //     if (!files)
+  //       return res.status(404).json({ error: "Nenhuma imagem encontrada" });
+
+  //     return res.status(200).json(files);
+  //   } catch (error) {
+  //     return res.status(500).json("message: " + error.errors[0].message);
+  //   }
+  // }
 }
 
 module.exports = new AnimaisController();
