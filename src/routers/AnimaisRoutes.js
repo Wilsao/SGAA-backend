@@ -11,7 +11,7 @@ router.delete("/animal/:id", autenticado, AnimalController.deletar); // ESTÁ NO
 router.get("/animal", AnimalController.obterTodos); // ESTÁ NO POSTMAN (Listar animais - testado - com validações)
 router.get("/animal/:id", AnimalController.obterPorId); // ESTÁ NO POSTMAN (Buscar animal por ID - testado - com validações)
 router.get("/animal/filtrar/:termobusca", AnimalController.filtrar); // ESTÁ NO POSTMAN (Buscar animal por nome, cor/pelagem, baia, chip, deficiência e condição resgate - testado - com validações)
-
+router.get("/animal/imagens/:id", AnimalController.listarImagens);
 // router.post("/animais", (req, res) => AnimalController.adicionar(req, res)); //Não soube usar essa rota no postman
 // router.put("/animais/:id", (req, res) => AnimalController.atualizar(req, res)); //Não soube usar essa rota no postman
 
