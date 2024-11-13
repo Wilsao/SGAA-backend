@@ -132,7 +132,7 @@ class AnimaisController {
             url: `/uploads/${file}`
           }));
 
-        if (!images)
+        if (images.length === 0)
           return res.status(404).json({ error: "Nenhuma imagem encontrada" });
 
         return res.status(200).json(images);
