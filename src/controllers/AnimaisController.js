@@ -110,33 +110,36 @@ class AnimaisController {
 
       // Consulta o banco de dados para obter as imagens associadas ao animal_id
       const imagens = await database.Imagem.findAll({ where: { animal_id: animal_id } });
+      if (imagens) {
+        // Extrai os nomes dos arquivos salvos no banco
+        const nomesArquivosBanco = imagens.map(image => image.key);
 
-      // Extrai os nomes dos arquivos salvos no banco
-      const nomesArquivosBanco = imagens.map(image => image.key);
+        // Define o caminho da pasta "uploads"
+        const directoryPath = path.resolve('uploads');
 
-      // Define o caminho da pasta "uploads"
-      const directoryPath = path.resolve('uploads');
+        // Lê todos os arquivos da pasta "uploads"
+        fs.readdir(directoryPath, (err, files) => {
+          if (err) {
+            return res.status(500).json({ message: "Erro ao ler a pasta de uploads.", error: err.message });
+          }
 
-      // Lê todos os arquivos da pasta "uploads"
-      fs.readdir(directoryPath, (err, files) => {
-        if (err) {
-          return res.status(500).json({ message: "Erro ao ler a pasta de uploads.", error: err.message });
-        }
+          // Filtra apenas arquivos de imagem e que estão no array nomesArquivosBanco
+          const images = files
+            .filter(file => nomesArquivosBanco.includes(file))
+            .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
+            .map(file => ({
+              nome: file.split('_').slice(1).join('_'),
+              url: `/uploads/${file}`
+            }));
 
-        // Filtra apenas arquivos de imagem e que estão no array nomesArquivosBanco
-        const images = files
-          .filter(file => nomesArquivosBanco.includes(file))
-          .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
-          .map(file => ({
-            nome: file.split('_').slice(1).join('_'),
-            url: `/uploads/${file}`
-          }));
+          if (images.length === 0)
+            return res.status(404).json({ error: "Nenhuma imagem encontrada" });
 
-        if (images.length === 0)
-          return res.status(404).json({ error: "Nenhuma imagem encontrada" });
-
-        return res.status(200).json(images);
-      });
+          return res.status(200).json(images);
+        });
+      }
+      else
+        return res.status(404).json({ error: "Animal não encontrado" });
     } catch (error) {
       return res.status(500).json({ message: "Erro ao obter imagens.", error: error.message });
     }
