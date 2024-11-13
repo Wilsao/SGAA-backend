@@ -1,5 +1,7 @@
 const database = require("../database/models");
 const { Op } = require("sequelize");
+const path = require("path");
+const fs = require("fs");
 
 class AnimaisController {
   async obterTodos(req, res) {
@@ -102,19 +104,43 @@ class AnimaisController {
     }
   }
 
-  // async ObterImagensPorAnimalId(req, res) {
-  //   const id = req.param.id;
-  //   try {
-  //     const files = database.Imagem.findAll({ where: { animal_id: id } });
+  async listarImagens(req, res) {
+    try {
+      const animal_id = req.params.id;
 
-  //     if (!files)
-  //       return res.status(404).json({ error: "Nenhuma imagem encontrada" });
+      // Consulta o banco de dados para obter as imagens associadas ao animal_id
+      const imagens = await database.Imagem.findAll({ where: { animal_id: animal_id } });
 
-  //     return res.status(200).json(files);
-  //   } catch (error) {
-  //     return res.status(500).json("message: " + error.errors[0].message);
-  //   }
-  // }
+      // Extrai os nomes dos arquivos salvos no banco
+      const nomesArquivosBanco = imagens.map(image => image.key);
+
+      // Define o caminho da pasta "uploads"
+      const directoryPath = path.resolve('uploads');
+
+      // Lê todos os arquivos da pasta "uploads"
+      fs.readdir(directoryPath, (err, files) => {
+        if (err) {
+          return res.status(500).json({ message: "Erro ao ler a pasta de uploads.", error: err.message });
+        }
+
+        // Filtra apenas arquivos de imagem e que estão no array nomesArquivosBanco
+        const images = files
+          .filter(file => nomesArquivosBanco.includes(file))
+          .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
+          .map(file => ({
+            nome: file.split('_').slice(1).join('_'),
+            url: `/uploads/${file}`
+          }));
+
+        if (!images)
+          return res.status(404).json({ error: "Nenhuma imagem encontrada" });
+
+        return res.status(200).json(images);
+      });
+    } catch (error) {
+      return res.status(500).json({ message: "Erro ao obter imagens.", error: error.message });
+    }
+  }
 }
 
 module.exports = new AnimaisController();
