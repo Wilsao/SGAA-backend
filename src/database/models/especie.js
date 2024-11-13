@@ -1,30 +1,56 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Especie extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      Especie.hasMany(models.Animal, {
-        foreignKey: 'especie_id'
-      })
+      // Associações, se necessárias
     }
   }
+
   Especie.init({
-    nome: DataTypes.STRING,
-    status: DataTypes.BOOLEAN,
+    nome: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: {
+        args: true,
+        msg: "Nome da espécie já existe. Escolha outro nome.",
+      },
+      validate: {
+        notEmpty: {
+          msg: "O campo nome não pode ser vazio."
+        },
+        len: {
+          args: [2, 50],
+          msg: "O nome deve ter entre 2 e 50 caracteres."
+        },
+        isUnique: async (value, next) => {
+          try {
+            const especie = await Especie.findOne({ where: { nome: value.toLowerCase() } });
+            if (especie) {
+              return next(new Error('Nome da espécie já existe. Escolha outro nome.'));
+            }
+            return next();
+          } catch (error) {
+            return next(error);
+          }
+        }
+      },
+      set(value) {
+        this.setDataValue('nome', value.toLowerCase());
+      }
+    },
+    status: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true 
+    },
     createdAt: DataTypes.DATE,
-    upatedAt: DataTypes.DATE,
-    deletedAt: DataTypes.DATE
+    updatedAt: DataTypes.DATE,
   }, {
     sequelize,
     modelName: 'Especie',
     tableName: 'especies'
   });
+
   return Especie;
 };

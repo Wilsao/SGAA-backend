@@ -1,6 +1,6 @@
-const { Router } = require('express');
-const UsuarioController = require('../controllers/UsuarioController.js');
-const autenticado = require('../middleware/autenticado.js');
+const { Router } = require("express");
+const UsuarioController = require("../controllers/UsuarioController.js");
+const autenticado = require("../middleware/autenticado.js");
 
 const router = Router();
 
@@ -17,24 +17,20 @@ const router = Router();
  *       401:
  *         description: Não autorizado (Token JWT inválido ou ausente)
  */
-router.get('/usuario/', autenticado, UsuarioController.obterTodos);
+router.get("/usuario/", autenticado, UsuarioController.obterTodos); // ESTÁ NO POSTMAN (Listar usuários - testado - com validações)
 
 /**
  * @swagger
  * /usuario/email/:
- *   get:
+ *   post:
  *     summary: Retorna um usuário por e-mail
- *     security:
- *       - bearerAuth: []  # JWT token
  *     responses:
  *       200:
  *         description: Usuário obtido com sucesso
- *       401:
- *         description: Não autorizado (Token JWT inválido ou ausente)
  *       404:
  *         description: Usuário não encontrado
  */
-router.post('/usuario/email/', UsuarioController.obterPorEmail);
+router.post("/usuario/email/", UsuarioController.obterPorEmail); // ESTÁ NO POSTMAN (Buscar usuário por EMAIL - testado - com validações)
 
 /**
  * @swagger
@@ -58,7 +54,11 @@ router.post('/usuario/email/', UsuarioController.obterPorEmail);
  *       404:
  *         description: Tipo de usuário não encontrado
  */
-router.get('/usuario/tipousuario/:tipo', autenticado, UsuarioController.ObterPorTipoUsuarioId);
+router.get(
+  "/usuario/tipousuario/:tipo",
+  autenticado,
+  UsuarioController.ObterPorTipoUsuarioId
+); // ESTÁ NO POSTMAN (Buscar usuário por TIPO ID - testado - com validações)
 
 /**
  * @swagger
@@ -82,7 +82,7 @@ router.get('/usuario/tipousuario/:tipo', autenticado, UsuarioController.ObterPor
  *       404:
  *         description: Usuário não encontrado
  */
-router.get('/usuario/:id/', autenticado, UsuarioController.obterPorId);
+router.get("/usuario/:id/", autenticado, UsuarioController.obterPorId); // ESTÁ NO POSTMAN (Buscar usuário por ID - testado - com validações)
 
 /**
  * @swagger
@@ -112,7 +112,7 @@ router.get('/usuario/:id/', autenticado, UsuarioController.obterPorId);
  *       401:
  *         description: Não autorizado (Token JWT inválido ou ausente)
  */
-router.post('/usuario/', autenticado, UsuarioController.adicionar);
+router.post("/usuario/", autenticado, UsuarioController.adicionar); // ESTÁ NO POSTMAN (Cadastrar usuário - testado - com validações)
 
 /**
  * @swagger
@@ -151,7 +151,7 @@ router.post('/usuario/', autenticado, UsuarioController.adicionar);
  *       404:
  *         description: Usuário não encontrado
  */
-router.put('/usuario/:id/', autenticado, UsuarioController.atualizar);
+router.put("/usuario/:id/", autenticado, UsuarioController.atualizar); // ESTÁ NO POSTMAN (Editar usuário - testado - com validações)
 
 /**
  * @swagger
@@ -175,9 +175,23 @@ router.put('/usuario/:id/', autenticado, UsuarioController.atualizar);
  *       404:
  *         description: Usuário não encontrado
  */
-router.delete('/usuario/:id', autenticado, UsuarioController.deletar);
+router.delete(
+  "/usuario/:id/:usuario_id",
+  autenticado,
+  UsuarioController.deletar
+); // ESTÁ NO POSTMAN (Deletar usuário - testado - com validações)
 
-router.post('/usuario/nova-senha', UsuarioController.definirNovaSenha);
-router.post('/usuario/definir-resposta', autenticado, UsuarioController.definirResposta);
+router.post(
+  "/usuario/definir-resposta",
+  autenticado,
+  UsuarioController.definirResposta
+); // ESTÁ NO POSTMAN (Cadastrar pergunta e resposta - testado - com validações)
+router.put(
+  "/usuario/definir-resposta/:idusuario",
+  autenticado,
+  UsuarioController.editarResposta
+); // ESTÁ NO POSTMAN (Editar pergunta e resposta - testado - com validações)
 
-module.exports = router;  
+router.post("/usuario/nova-senha", UsuarioController.definirNovaSenha); // ESTÁ NO POSTMAN (Reset de senha - testado - com validações)
+
+module.exports = router;

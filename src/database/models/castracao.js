@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Castracao extends Model {
     /**
@@ -11,29 +9,32 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Castracao.belongsTo(models.Especie, {
-        foreignKey: 'especie_id'
+        foreignKey: "especie_id",
       });
       Castracao.belongsTo(models.Usuario, {
-        foreignKey: 'usuario_id',
+        foreignKey: "usuario_id",
       });
-      Castracao.hasMany(models.Animal, {
-        foreignKey: 'castracao_id',
+      Castracao.belongsTo(models.Animal, {
+        foreignKey: "animal_id",
       });
     }
   }
-  Castracao.init({
-    local_evento: DataTypes.STRING,
-    nome_evento: DataTypes.STRING,
-    data_evento: DataTypes.DATE,
-    sexo: DataTypes.STRING,
-    quantidade_castrada: DataTypes.STRING,
-    status: DataTypes.BOOLEAN,
-    createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE
-  }, {
-    sequelize,
-    modelName: 'Castracao',
-    tableName: 'castracoes'
-  });
+  Castracao.init(
+    {
+      local_evento: DataTypes.STRING,
+      descricao: DataTypes.STRING,
+      data_evento: DataTypes.DATE,
+      quantidade_macho: DataTypes.INTEGER,
+      quantidade_femea: DataTypes.INTEGER,
+      status: DataTypes.BOOLEAN,
+      createdAt: DataTypes.DATE,
+      updatedAt: DataTypes.DATE,
+    },
+    {
+      sequelize,
+      modelName: "Castracao",
+      tableName: "castracoes",
+    }
+  );
   return Castracao;
 };

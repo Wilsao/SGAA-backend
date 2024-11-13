@@ -1,33 +1,22 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+const morgan = require("morgan");
 const cors = require('cors');
-// const path = require('path');
-// const multer = require('multer');
-// const AnimalController = require('./controllers/old/AnimalController.js');
+const multer = require('multer');
+const multerConfig = require('./multerConfig');
 const routes = require('./routers');
+const AnimalController = require("./controllers/AnimaisController");
+const autenticado = require('./middleware/autenticado');
+const database = require("./database/models");
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
+
+app.post("/animal/upload/:animal_id", autenticado, multer(multerConfig).single('file'), AnimalController.adicionarImagens);
 
 routes(app);
-
-// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, 'uploads/');
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, `${Date.now()}_${file.originalname}`);
-//   }
-// });
-
-// const upload = multer({ storage: storage });
-// const animalController = new AnimalController();
-// app.put('/animal/:id', upload.single('foto'), (req, res) => animalController.atualizar(req, res));
-// app.post('/animal', upload.single('foto'), (req, res) => animalController.adicionar(req, res));
 
 module.exports = app;

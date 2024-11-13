@@ -1,52 +1,74 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Animal extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       Animal.belongsTo(models.StatusAnimal, {
-        foreignKey: 'status_animal_id'
+        foreignKey: "status_animal_id",
+        as: "statusAnimal",
+        allowNull: false,
       });
       Animal.belongsTo(models.Especie, {
-        foreignKey: 'especie_id'
-      });
-      Animal.belongsTo(models.Castracao, {
-        foreignKey: 'castracao_id'
+        foreignKey: "especie_id",
+        as: "especie",
+        allowNull: false,
       });
       Animal.belongsToMany(models.Pessoa, {
         through: models.Adocao,
-        foreignKey: 'animal_id',
-        otherKey: 'pessoa_id',
-        as: 'pessoas',
+        foreignKey: "animal_id",
+        otherKey: "pessoa_id",
+        as: "pessoas",
       });
     }
   }
-  Animal.init({
-    nome: DataTypes.STRING,
-    sexo: DataTypes.STRING,
-    pelagem: DataTypes.STRING,
-    deficiencia: DataTypes.STRING,
-    idade: DataTypes.STRING,
-    status: DataTypes.BOOLEAN,
-    numero_chip: DataTypes.STRING,
-    numero_baia: DataTypes.STRING,
-    condicao_resgate: DataTypes.STRING,
-    especie_id: DataTypes.INTEGER,
-    castracao_id: DataTypes.INTEGER,
-    data_nascimento: DataTypes.DATE,
-    data_morte: DataTypes.DATE,
-    createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE,
-  }, {
-    sequelize,
-    modelName: 'Animal',
-    tableName: 'animais'
-  });
+
+  Animal.init(
+    {
+      nome: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      sexo: {
+        type: DataTypes.ENUM("M", "F"),
+        allowNull: false,
+        validate: {
+          isIn: [["M", "F"]],
+        },
+      },
+      cor_pelagem: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      deficiencia: DataTypes.STRING,
+      data_ocorrencia: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      data_nascimento_aproximada: DataTypes.DATE,
+      numero_baia: DataTypes.STRING,
+      numero_chip: {
+        type: DataTypes.STRING,
+        unique: true,
+      },
+      condicao_resgate: DataTypes.STRING,
+      status_animal_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "StatusAnimal",
+          key: "id",
+        },
+      },
+      createdAt: DataTypes.DATE,
+      updatedAt: DataTypes.DATE,
+    },
+    {
+      sequelize,
+      modelName: "Animal",
+      tableName: "animais",
+    }
+  );
+
   return Animal;
 };

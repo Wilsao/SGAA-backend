@@ -1,19 +1,18 @@
-const { Router } = require('express');
-const fileUpload = require('express-fileupload');
-const AnimalController = require('../controllers/AnimaisController.js');
-const autenticado = require('../middleware/autenticado.js');
+const router = require("express").Router();
+const AnimalController = require("../controllers/AnimaisController.js");
+const autenticado = require("../middleware/autenticado.js");
 
-const router = Router();
+//ROTAS AUTENTICADAS
+router.post("/animal", autenticado, AnimalController.adicionar); // ESTÁ NO POSTMAN (Cadastrar animal - testado - com validações)
+router.put("/animal/:id", autenticado, AnimalController.atualizar); // ESTÁ NO POSTMAN (Editar animal - testado - com validações)
+router.delete("/animal/:id", autenticado, AnimalController.deletar); // ESTÁ NO POSTMAN (Deletar animal - testado - com validações)
 
-router.use(fileUpload());
+//ROTAS **NÃO** AUTENTICADAS
+router.get("/animal", AnimalController.obterTodos); // ESTÁ NO POSTMAN (Listar animais - testado - com validações)
+router.get("/animal/:id", AnimalController.obterPorId); // ESTÁ NO POSTMAN (Buscar animal por ID - testado - com validações)
+router.get("/animal/filtrar/:termobusca", AnimalController.filtrar); // ESTÁ NO POSTMAN (Buscar animal por nome, cor/pelagem, baia, chip, deficiência e condição resgate - testado - com validações)
 
-router.get('/animal', AnimalController.obterTodos);
-router.get('/animal/:id', AnimalController.obterPorId);
-router.post('/animal', autenticado, AnimalController.adicionar);
-router.put('/animal/:id', autenticado, AnimalController.atualizar);
-router.delete('/animal/:id', autenticado, AnimalController.deletar);
-router.get('/animal/filtrar/:termobusca', AnimalController.filtrar);
-router.post('/animais', (req, res) => AnimalController.adicionar(req, res));
-router.put('/animais/:id', (req, res) => AnimalController.atualizar(req, res));
+// router.post("/animais", (req, res) => AnimalController.adicionar(req, res)); //Não soube usar essa rota no postman
+// router.put("/animais/:id", (req, res) => AnimalController.atualizar(req, res)); //Não soube usar essa rota no postman
 
 module.exports = router;

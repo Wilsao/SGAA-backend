@@ -1,0 +1,208 @@
+'use strict';
+
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.bulkInsert('animais', [
+      {
+        especie_id: 1,
+        status_animal_id: 1,
+        nome: 'Fido',
+        sexo: 'M',
+        cor_pelagem: 'Marrom',
+        numero_chip: '987654321',
+        numero_baia: 'A-002',
+        condicao_resgate: 'Resgatado',
+        data_nascimento_aproximada: new Date('2021-01-01'),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        especie_id: 2,
+        status_animal_id: 1,
+        nome: 'Whiskers',
+        sexo: 'F',
+        cor_pelagem: 'Branco',
+        numero_chip: '123123123',
+        numero_baia: 'B-001',
+        condicao_resgate: 'Adoção',
+        data_nascimento_aproximada: new Date('2022-05-15'),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        especie_id: 2,
+        status_animal_id: 2,
+        nome: 'Buddy',
+        sexo: 'M',
+        cor_pelagem: 'Preto',
+        numero_chip: '456456456',
+        numero_baia: 'C-003',
+        condicao_resgate: 'Resgatado',
+        data_nascimento_aproximada: new Date('2019-03-12'),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        especie_id: 1,
+        status_animal_id: 1,
+        nome: 'Bella',
+        sexo: 'F',
+        cor_pelagem: 'Dourado',
+        numero_chip: '321321321',
+        numero_baia: 'A-004',
+        condicao_resgate: 'Adoção',
+        data_nascimento_aproximada: new Date('2023-07-20'),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        especie_id: 2,
+        status_animal_id: 3,
+        nome: 'Max',
+        sexo: 'M',
+        cor_pelagem: 'Cinza',
+        numero_chip: '654654654',
+        numero_baia: 'B-002',
+        condicao_resgate: 'Adoção',
+        data_nascimento_aproximada: new Date('2016-10-10'),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        especie_id: 2,
+        status_animal_id: 1,
+        nome: 'Daisy',
+        sexo: 'F',
+        cor_pelagem: 'Preto e Branco',
+        numero_chip: '789789789',
+        numero_baia: 'C-001',
+        condicao_resgate: 'Resgatado',
+        data_nascimento_aproximada: new Date('2018-08-01'),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        especie_id: 1,
+        status_animal_id: 2,
+        nome: 'Lola',
+        sexo: 'F',
+        cor_pelagem: 'Tricolor',
+        numero_chip: '147258369',
+        numero_baia: 'A-005',
+        condicao_resgate: 'Adoção',
+        data_nascimento_aproximada: new Date('2022-12-15'),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        especie_id: 2,
+        status_animal_id: 1,
+        nome: 'Charlie',
+        sexo: 'M',
+        cor_pelagem: 'Caramelo',
+        numero_chip: '258369147',
+        numero_baia: 'B-003',
+        condicao_resgate: 'Resgatado',
+        data_nascimento_aproximada: new Date('2017-04-20'),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        especie_id: 1,
+        status_animal_id: 3,
+        nome: 'Rocky',
+        sexo: 'M',
+        cor_pelagem: 'Marrom Claro',
+        numero_chip: '369147258',
+        numero_baia: 'C-002',
+        condicao_resgate: 'Adoção',
+        data_nascimento_aproximada: new Date('2021-11-11'),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        especie_id: 1,
+        status_animal_id: 2,
+        nome: 'Zoe',
+        sexo: 'F',
+        cor_pelagem: 'Branco e Preto',
+        numero_chip: '987321654',
+        numero_baia: 'A-006',
+        condicao_resgate: 'Resgatado',
+        data_nascimento_aproximada: new Date('2019-09-09'),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        especie_id: 2,
+        status_animal_id: 1,
+        nome: 'Milo',
+        sexo: 'M',
+        cor_pelagem: 'Siamês',
+        numero_chip: '159753486',
+        numero_baia: 'B-004',
+        condicao_resgate: 'Adoção',
+        data_nascimento_aproximada: new Date('2022-06-30'),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        especie_id: 2,
+        status_animal_id: 1,
+        nome: 'Coco',
+        sexo: 'F',
+        cor_pelagem: 'Caramelo',
+        numero_chip: '753159864',
+        numero_baia: 'C-004',
+        condicao_resgate: 'Resgatado',
+        data_nascimento_aproximada: new Date('2018-02-14'),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        especie_id: 1,
+        status_animal_id: 3,
+        nome: 'Toby',
+        sexo: 'M',
+        cor_pelagem: 'Branco',
+        numero_chip: '321654987',
+        numero_baia: 'A-007',
+        condicao_resgate: 'Adoção',
+        data_nascimento_aproximada: new Date('2017-03-01'),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        especie_id: 2,
+        status_animal_id: 2,
+        nome: 'Nina',
+        sexo: 'F',
+        cor_pelagem: 'Laranja',
+        numero_chip: '654987321',
+        numero_baia: 'B-005',
+        condicao_resgate: 'Resgatado',
+        data_nascimento_aproximada: new Date('2023-09-10'),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        especie_id: 1,
+        status_animal_id: 1,
+        nome: 'Rex',
+        sexo: 'M',
+        cor_pelagem: 'Cinza',
+        numero_chip: '963258741',
+        numero_baia: 'C-005',
+        condicao_resgate: 'Adoção',
+        data_nascimento_aproximada: new Date('2019-06-20'),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ], { returning: true });
+  },
+
+  async down(queryInterface, Sequelize) {
+    await queryInterface.bulkDelete('animais', null, {});
+  }
+};
