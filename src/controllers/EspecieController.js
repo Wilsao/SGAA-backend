@@ -23,7 +23,7 @@ class EspecieController {
         return res.status(404).json({ error: "Especie não encontrada" });
       return res.status(200).json(especie);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -35,7 +35,7 @@ class EspecieController {
         return res.status(404).json({ error: "Especie não encontrada" });
       return res.status(200).json(especie);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 

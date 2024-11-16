@@ -1,6 +1,7 @@
 'use strict';
 
 const { Cuidado } = require('../models'); // Importa o modelo Cuidado para consulta
+const { Usuario } = require('../models');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

@@ -23,7 +23,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       status: {
-        type: Sequelize.ENUM('pendente', 'em_progresso', 'concluida'),
+        type: Sequelize.ENUM('pendente', 'em_progresso', 'concluido'),
         allowNull: false,
         defaultValue: 'pendente',
       },

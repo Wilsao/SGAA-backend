@@ -23,7 +23,7 @@ class AdocaoController {
 
       return res.status(201).json(novaAdocao);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -58,7 +58,7 @@ class AdocaoController {
 
       return res.status(200).json(adocao);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -67,7 +67,7 @@ class AdocaoController {
       const adocoes = await database.Adocao.findAll();
       return res.status(200).json(adocoes);
     } catch (error) {
-      return res.status(500).json(error);
+      return res.status(500).json(error.message);
     }
   }
 
@@ -81,8 +81,8 @@ class AdocaoController {
         return res.status(404).json({ error: "Adocão não encontrada" });
 
       return res.status(200).json(adocao);
-    } catch (error) {
-      return res.status(500).json(error);
+    } catch (erro) {
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -92,9 +92,9 @@ class AdocaoController {
       await database.Adocao.destroy({ where: { id: id } });
 
       res.status(200).json({ message: "Adoção excluida com sucesso" });
-    } catch (error) {
-      console.log("Erro ao tentar excluir adocão", error);
-      res.status(500).json({ error: "Erro ao tentar excluir adocão" + error });
+    } catch (erro) {
+      console.log("Erro ao tentar excluir adocão: ", erro.message);
+      res.status(500).json(erro.message);
     }
   }
 }

@@ -7,7 +7,7 @@ module.exports = {
     const cuidadosTipos = [
       { titulo: 'Vacinar', descricao: 'Vacinação anual obrigatória', status: 'pendente' },
       { titulo: 'Dar Remédio', descricao: 'Administrar remédio prescrito pelo veterinário', status: 'em_progresso' },
-      { titulo: 'Tozar', descricao: 'Corte de pelo e limpeza das orelhas', status: 'concluida' },
+      { titulo: 'Tozar', descricao: 'Corte de pelo e limpeza das orelhas', status: 'concluido' },
       { titulo: 'Exame Veterinário', descricao: 'Exame de rotina para avaliar a saúde geral', status: 'pendente' },
       { titulo: 'Banho', descricao: 'Banho semanal para higiene', status: 'em_progresso' }
     ];

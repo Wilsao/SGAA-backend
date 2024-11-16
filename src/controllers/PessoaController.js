@@ -9,7 +9,7 @@ class PessoaController {
 
       return res.status(200).json(pessoas);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -25,7 +25,7 @@ class PessoaController {
 
       return res.status(200).json(pessoa);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -37,7 +37,7 @@ class PessoaController {
         return res.status(404).json({ error: "Pessoa não encontrada" });
       return res.status(200).json(pessoa);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -120,7 +120,7 @@ class PessoaController {
       console.log({ enderecos });
       return res.status(200).json(enderecos);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -141,7 +141,7 @@ class PessoaController {
         endereco: novoEndereco,
       });
     } catch (erro) {
-      return res.status(500).json({ error: erro.message });
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -167,7 +167,7 @@ class PessoaController {
         .status(200)
         .json({ message: "Endereço atualizado com sucesso", endereco });
     } catch (erro) {
-      return res.status(500).json({ error: erro.message });
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -191,7 +191,7 @@ class PessoaController {
         .status(200)
         .json({ message: "Endereço removido com sucesso." });
     } catch (erro) {
-      return res.status(500).json({ error: erro.message });
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -209,7 +209,7 @@ class PessoaController {
       });
       return res.status(200).json(contatos);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -343,13 +343,13 @@ class PessoaController {
 
   // Remove um contato de uma pessoa (logicamente)
   async removeContato(req, res) {
-    const pessoaId = req.params.id; 
-    const contatoId = req.params.contatoId; 
+    const pessoaId = req.params.id;
+    const contatoId = req.params.contatoId;
     try {
       const contato = await database.Contato.findOne({
         where: {
           id: contatoId,
-          pessoa_id: pessoaId, 
+          pessoa_id: pessoaId,
         },
       });
       if (!contato) {
@@ -359,13 +359,13 @@ class PessoaController {
       }
       contato.status = false;
       await contato.save();
-      await contato.destroy(); 
+      await contato.destroy();
       console.log(
         `Contato com id ${contatoId} foi removido da pessoa ${pessoaId}.`
-      ); 
+      );
       return res.status(200).json({ message: "Contato excluído com sucesso" });
     } catch (error) {
-      console.error("Erro ao excluir contato:", error.message); 
+      console.error("Erro ao excluir contato:", error.message);
       return res.status(500).json({ error: error.message });
     }
   }

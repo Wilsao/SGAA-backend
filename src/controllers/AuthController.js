@@ -33,7 +33,7 @@ class AuthController {
       return res.status(200).json({ token: accessToken });
     }
     catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -43,7 +43,7 @@ class AuthController {
       // apos resposta 200, deletar o token, sim é só isso
       return res.status(200).json({ message: 'Logout realizado com sucesso' });
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 

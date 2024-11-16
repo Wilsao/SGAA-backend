@@ -11,7 +11,7 @@ class ArrecadacaoController {
 
       return res.status(200).json(arrecadacoes);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -27,7 +27,7 @@ class ArrecadacaoController {
 
       return res.status(200).json(arrecadacao);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -37,7 +37,7 @@ class ArrecadacaoController {
       const arrecadacao = await database.Arrecadacao.create(dados);
       return res.status(201).json(arrecadacao);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -51,7 +51,7 @@ class ArrecadacaoController {
         .status(200)
         .json({ message: "Arrecadacao atualizada com sucesso" });
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -69,8 +69,8 @@ class ArrecadacaoController {
       return res
         .status(200)
         .json({ message: "Arrecadacao excluída com sucesso" });
-    } catch (error) {
-      return res.status(500).json(error);
+    } catch (erro) {
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -87,7 +87,7 @@ class ArrecadacaoController {
       });
       return res.status(200).json(arrecadacoes);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -104,9 +104,9 @@ class ArrecadacaoController {
       });
       return res.status(200).json(arrecadacoes);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
-}
+  }
 }
 
 module.exports = new ArrecadacaoController();

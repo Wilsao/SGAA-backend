@@ -13,7 +13,7 @@ class AnimaisController {
 
       return res.json(animais);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -27,7 +27,7 @@ class AnimaisController {
 
       return res.json(animal);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 

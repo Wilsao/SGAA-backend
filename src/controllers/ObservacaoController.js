@@ -12,7 +12,7 @@ class ObservacaoController {
       return res.status(404).json({ message: "Nenhuma observação encontrada" });
     }
     catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -23,7 +23,7 @@ class ObservacaoController {
       return res.status(200).json(novaObservacao);
     }
     catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -35,7 +35,7 @@ class ObservacaoController {
       return res.status(200).json({ message: "Observação atualizada com sucesso" });
     }
     catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -46,7 +46,7 @@ class ObservacaoController {
       return res.status(200).json({ message: "Observação excluída com sucesso" });
     }
     catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 }

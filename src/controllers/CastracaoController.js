@@ -11,7 +11,7 @@ class CastracaoController {
 
       return res.status(200).json(castracoes);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -25,7 +25,7 @@ class CastracaoController {
 
       return res.status(200).json(castracao);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -35,7 +35,7 @@ class CastracaoController {
       const novaCastracao = await database.Castracao.create(castracao);
       return res.status(201).json(novaCastracao);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
@@ -50,12 +50,12 @@ class CastracaoController {
         .status(200)
         .json({ message: "Castracao atualizada com sucesso" });
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 
   async excluir(req, res) {
-    const id  = req.params.id;
+    const id = req.params.id;
     try {
       const resultado = await database.Castracao.destroy({ where: { id: id } });
       if (resultado === 0) {
@@ -63,10 +63,10 @@ class CastracaoController {
       }
       return res.status(200).json({ message: "Item removido" });
     } catch (error) {
-      console.log("Erro ao tentar excluir castração", error);
+      console.log("Erro ao tentar excluir castração", error.message);
       res
         .status(500)
-        .json({ error: "Erro ao tentar excluir castração" + error });
+        .json({ error: "Erro ao tentar excluir castração" + error.message });
     }
   }
 
@@ -83,7 +83,7 @@ class CastracaoController {
       });
       return res.status(200).json(castracoes);
     } catch (erro) {
-      return res.status(500).json(erro);
+      return res.status(500).json(erro.message);
     }
   }
 }

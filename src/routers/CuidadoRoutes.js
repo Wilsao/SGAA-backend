@@ -8,6 +8,7 @@ const router = Router();
 router.use(fileUpload());
 
 router.post("/cuidado", autenticado, CuidadoController.adicionar);
+router.post("/cuidado/realizado/:id", autenticado, CuidadoController.marcarCuidadoConcluido);
 router.put("/cuidado/:id", autenticado, CuidadoController.atualizar);
 router.delete("/cuidado/:id", autenticado, CuidadoController.deletar);
 router.get("/cuidado/animal/:id", autenticado, CuidadoController.obterCuidadosPorAnimal);

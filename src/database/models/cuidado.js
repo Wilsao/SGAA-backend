@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
   Cuidado.init({
     titulo: DataTypes.STRING,
     status: {
-      type: DataTypes.ENUM('pendente', 'em_progresso', 'concluida'),
+      type: DataTypes.ENUM('pendente', 'em_progresso', 'concluido'),
       allowNull: false,
       defaultValue: 'pendente',
     },
