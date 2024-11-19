@@ -14,5 +14,6 @@ router.get("/animal/filtrar/:termobusca", AnimalController.filtrar); // ESTÁ NO
 router.get("/animal/imagens/:id", AnimalController.listarImagens);
 // router.post("/animais", (req, res) => AnimalController.adicionar(req, res)); //Não soube usar essa rota no postman
 // router.put("/animais/:id", (req, res) => AnimalController.atualizar(req, res)); //Não soube usar essa rota no postman
+router.delete('/animal/imagens/:key', autenticado, AnimalController.deletarImagem);
 
 module.exports = router;

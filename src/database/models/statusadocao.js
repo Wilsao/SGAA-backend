@@ -1,26 +1,35 @@
+// models/StatusAdocao.js
+
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class StatusAdocao extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       StatusAdocao.hasMany(models.Adocao, {
-        foreignKey: 'status_adocao_id'
+        foreignKey: 'status_adocao_id',
+        as: 'adocoes',
       });
     }
   }
-  StatusAdocao.init({
-    nome: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'StatusAdocao',
-    tableName: 'status_adocao'
-  });
+  StatusAdocao.init(
+    {
+      nome: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      status: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      createdAt: DataTypes.DATE,
+      updatedAt: DataTypes.DATE,
+    },
+    {
+      sequelize,
+      modelName: 'StatusAdocao',
+      tableName: 'status_adocao',
+    }
+  );
   return StatusAdocao;
 };

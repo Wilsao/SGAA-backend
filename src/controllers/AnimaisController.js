@@ -6,7 +6,25 @@ const fs = require("fs");
 class AnimaisController {
   async obterTodos(req, res) {
     try {
-      const animais = await database.Animal.findAll();
+      const animais = await database.Animal.findAll({
+        include: [
+          {
+            model: database.Pessoa,
+            as: "responsavel",
+            attributes: ["id", "nome"],
+          },
+          {
+            model: database.StatusAnimal,
+            as: "statusAnimal",
+            attributes: ["id", "nome"],
+          },
+          {
+            model: database.Especie,
+            as: "especie",
+            attributes: ["id", "nome"],
+          },
+        ],
+      });
 
       if (!animais)
         return res.status(404).json({ error: "Animais não encontrados" });
@@ -20,7 +38,16 @@ class AnimaisController {
   async obterPorId(req, res) {
     const id = req.params.id;
     try {
-      const animal = await database.Animal.findOne({ where: { id: id } });
+      const animal = await database.Animal.findOne({
+        where: { id: id },
+        include: [
+          {
+            model: database.Pessoa,
+            as: "responsavel",
+            attributes: ["id", "nome"],
+          },
+        ],
+      });
 
       if (!animal)
         return res.status(404).json({ error: "Animal não encontrado" });
@@ -37,7 +64,7 @@ class AnimaisController {
       const animal = await database.Animal.create(dados);
       return res.status(201).json(animal);
     } catch (error) {
-      return res.status(500).json("message: " + error.errors[0].message);
+      return res.status(500).json({ message: error.message });
     }
   }
 
@@ -45,10 +72,15 @@ class AnimaisController {
     const id = req.params.id;
     const dados = req.body;
     try {
+      const animalExistente = await database.Animal.findByPk(id);
+      if (!animalExistente) {
+        return res.status(404).json({ error: "Animal não encontrado" });
+      }
+
       await database.Animal.update(dados, { where: { id: id } });
       return res.status(200).json({ message: "Animal atualizado com sucesso" });
     } catch (error) {
-      return res.status(500).json("message: " + error.errors[0].message);
+      return res.status(500).json({ message: error.message });
     }
   }
 
@@ -90,17 +122,27 @@ class AnimaisController {
   }
 
   async adicionarImagens(req, res) {
+    console.log('adicionando imagem');
     try {
-      const files = {
+      console.log('Animal ID:', req.params.animal_id);
+      console.log('Received file:', req.file);
+
+      if (!req.file) {
+        return res.status(400).json({ error: 'Nenhuma imagem foi enviada.' });
+      }
+
+      const fileData = {
         animal_id: req.params.animal_id,
         nome: req.file.originalname,
-        key: req.file.filename
+        key: req.file.filename,
+        createdAt: new Date(),
       };
 
-      const images = await database.Imagem.create(files);
-      return res.status(201).json(images);
+      const image = await database.Imagem.create(fileData);
+      return res.status(201).json(image);
     } catch (error) {
-      return res.status(500).json("message: " + error.errors[0].message);
+      console.error('Error in adicionarImagens:', error);
+      return res.status(500).json({ error: error.message });
     }
   }
 
@@ -108,40 +150,66 @@ class AnimaisController {
     try {
       const animal_id = req.params.id;
 
-      // Consulta o banco de dados para obter as imagens associadas ao animal_id
       const imagens = await database.Imagem.findAll({ where: { animal_id: animal_id } });
       if (imagens.length > 0) {
-        // Extrai os nomes dos arquivos salvos no banco
         const nomesArquivosBanco = imagens.map(image => image.key);
 
-        // Define o caminho da pasta "uploads"
         const directoryPath = path.resolve('uploads');
 
-        // Lê todos os arquivos da pasta "uploads"
         fs.readdir(directoryPath, (err, files) => {
           if (err) {
             return res.status(500).json({ message: "Erro ao ler a pasta de uploads.", error: err.message });
           }
 
-          // Filtra apenas arquivos de imagem e que estão no array nomesArquivosBanco
           const images = files
             .filter(file => nomesArquivosBanco.includes(file))
             .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
-            .map(file => ({
-              nome: file.split('_').slice(1).join('_'),
-              url: `/uploads/${file}`
-            }));
+            .map(file => {
+              const imagemCorrespondente = imagens.find(imagem => imagem.key === file);
+
+              return {
+                key: imagemCorrespondente.key,
+                nome: imagemCorrespondente.nome,
+                url: `/uploads/${file}`
+              };
+            });
 
           if (images.length === 0)
             return res.status(404).json({ error: "Nenhuma imagem encontrada" });
 
           return res.status(200).json(images);
         });
-      }
-      else
+      } else {
         return res.status(404).json({ error: "Animal não encontrado" });
+      }
     } catch (error) {
+      console.error("Erro ao obter imagens:", error);
       return res.status(500).json({ message: "Erro ao obter imagens.", error: error.message });
+    }
+  }
+
+  async deletarImagem(req, res) {
+    try {
+      const { key } = req.params;
+  
+      const imagem = await database.Imagem.findOne({ where: { key } });
+      if (!imagem) {
+        return res.status(404).json({ error: 'Imagem não encontrada.' });
+      }
+  
+      const filePath = path.resolve('uploads', key);
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.error('Erro ao deletar arquivo:', err);
+        }
+      });
+  
+      await imagem.destroy();
+  
+      return res.status(200).json({ message: 'Imagem excluída com sucesso.' });
+    } catch (error) {
+      console.error('Erro ao excluir imagem:', error);
+      return res.status(500).json({ error: error.message });
     }
   }
 }

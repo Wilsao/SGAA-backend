@@ -1,6 +1,8 @@
+// models/Adocao.js
+
 "use strict";
-/** @type {import('sequelize-cli').Migration} */
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Adocao extends Model {
     static associate(models) {
@@ -18,12 +20,37 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
+
   Adocao.init(
     {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
+      },
+      pessoa_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "pessoas", // Name of the target table
+          key: "id",
+        },
+      },
+      animal_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "animais",
+          key: "id",
+        },
+      },
+      status_adocao_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "status_adocoes",
+          key: "id",
+        },
       },
       data_adocao: DataTypes.DATE,
       observacao: DataTypes.STRING,
@@ -38,5 +65,6 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "adocoes",
     }
   );
+
   return Adocao;
 };

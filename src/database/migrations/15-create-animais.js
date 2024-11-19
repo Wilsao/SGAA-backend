@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('animais', {
+    await queryInterface.createTable("animais", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -14,21 +14,31 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'status_animal',
-          key: 'id'
+          model: "status_animal",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       especie_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'especies',
-          key: 'id'
+          model: "especies",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
+      responsavel_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: "pessoas",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       nome: {
         type: Sequelize.STRING,
@@ -48,7 +58,7 @@ module.exports = {
       data_ocorrencia: {
         type: Sequelize.DATE,
         allowNull: true,
-        defaultValue: Sequelize.NOW
+        defaultValue: Sequelize.NOW,
       },
       data_nascimento_aproximada: {
         type: Sequelize.DATE,
@@ -77,6 +87,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('animais');
+    await queryInterface.dropTable("animais");
   },
 };

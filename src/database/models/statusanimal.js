@@ -1,14 +1,7 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class StatusAnimal extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       StatusAnimal.hasMany(models.Animal, {
         foreignKey: 'status_animal_id'
@@ -16,7 +9,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   StatusAnimal.init({
-    nome: DataTypes.STRING
+    nome: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    }
   }, {
     sequelize,
     modelName: 'StatusAnimal',

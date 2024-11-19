@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Endereco",
       tableName: "enderecos",
-      paranoid: true, // Habilita a exclusão lógica com o campo `deletedAt`
+      // paranoid: true, // Habilita a exclusão lógica com o campo `deletedAt`
     }
   );
   return Endereco;

@@ -25,7 +25,11 @@ module.exports = (sequelize, DataTypes) => {
         through: models.Adocao,
         foreignKey: 'pessoa_id',
         otherKey: 'animal_id',
-        as: 'animais',
+        as: 'animais_adotados',
+      });
+      Pessoa.hasMany(models.Animal, {
+        foreignKey: "responsavel_id",
+        as: "animais_sob_cuidados",
       });
     }
   }
@@ -34,6 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     cpf: DataTypes.STRING,
     sexo: DataTypes.STRING,
     data_nascimento: DataTypes.DATE,
+    usuario_id: DataTypes.INTEGER, 
     cuidador: DataTypes.BOOLEAN,
     status: DataTypes.BOOLEAN,
     createdAt: DataTypes.DATE,

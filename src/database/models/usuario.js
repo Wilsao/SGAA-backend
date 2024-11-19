@@ -1,11 +1,19 @@
+// models/Usuario.js
+
 "use strict";
-const { Model } = require("sequelize");
+const { Model, Op } = require("sequelize");
+const bcrypt = require("bcryptjs");
 
 module.exports = (sequelize, DataTypes) => {
   class Usuario extends Model {
     static associate(models) {
       Usuario.belongsTo(models.TipoUsuario, {
         foreignKey: "tipo_usuario_id",
+      });
+
+      Usuario.hasOne(models.Pessoa, {
+        foreignKey: "usuario_id",
+        as: "pessoa",
       });
     }
 
@@ -40,6 +48,11 @@ module.exports = (sequelize, DataTypes) => {
       if (qtdeAdmins === 1 && usuarioId === usuarioExcluindoId) {
         throw new Error("É necessário que exista pelo menos um administrador.");
       }
+    }
+
+    // Method to compare passwords
+    async checkPassword(senha) {
+      return await bcrypt.compare(senha, this.senha);
     }
   }
 
@@ -94,6 +107,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      tipo_usuario_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
     {
       sequelize,
@@ -105,24 +122,40 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       hooks: {
+        // Hook to handle password hashing and email uniqueness on creation
         async beforeCreate(usuario) {
+          // Email uniqueness check
           const existingUser = await Usuario.findOne({
             where: { email: usuario.email },
           });
           if (existingUser) {
             throw new Error("Já existe um usuário com esse e-mail.");
           }
+          // Password hashing
+          if (usuario.senha) {
+            const hash = await bcrypt.hash(usuario.senha, 10);
+            usuario.senha = hash;
+          }
         },
+        // Hook to handle password hashing and email uniqueness on update
         async beforeUpdate(usuario) {
+          // Email uniqueness check
           if (usuario.changed("email")) {
             const existingUser = await Usuario.findOne({
               where: {
                 email: usuario.email,
-                id: { [sequelize.Op.ne]: usuario.id },
+                id: { [Op.ne]: usuario.id },
               },
             });
             if (existingUser) {
               throw new Error("Esse e-mail já está em uso por outro usuário.");
+            }
+          }
+          // Password hashing if the password has changed
+          if (usuario.changed("senha")) {
+            if (usuario.senha) {
+              const hash = await bcrypt.hash(usuario.senha, 10);
+              usuario.senha = hash;
             }
           }
         },

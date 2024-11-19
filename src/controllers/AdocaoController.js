@@ -13,40 +13,33 @@ class AdocaoController {
 
     try {
       const novaAdocao = await database.Adocao.create({
-        pessoaId: pessoa_id,
-        animalId: animal_id,
+        pessoa_id: pessoa_id,
+        animal_id: animal_id,
         observacao: observacao,
-        statusAdocaoId: status_adocao_id,
-        dataInicio: data_inicio,
-        dataFim: data_fim,
+        status_adocao_id: status_adocao_id || 1,
+        data_inicio: data_inicio || new Date(),
+        data_fim: data_fim,
       });
 
       return res.status(201).json(novaAdocao);
     } catch (erro) {
-      return res.status(500).json(erro.message);
+      return res.status(500).json({ error: erro.message });
     }
   }
 
   async atualizar(req, res) {
     const { id } = req.params;
     const {
-      pessoa_id,
-      animal_id,
-      observacao,
       status_adocao_id,
-      data_inicio,
-      data_fim,
+      observacao,
     } = req.body;
 
     try {
       const [updated] = await database.Adocao.update(
         {
-          pessoaId: pessoa_id,
-          animalId: animal_id,
+          status_adocao_id: status_adocao_id,
           observacao: observacao,
-          statusAdocaoId: status_adocao_id,
-          dataInicio: data_inicio,
-          dataFim: data_fim,
+          updatedAt: new Date(),
         },
         { where: { id } }
       );
@@ -58,16 +51,43 @@ class AdocaoController {
 
       return res.status(200).json(adocao);
     } catch (erro) {
-      return res.status(500).json(erro.message);
+      return res.status(500).json({ error: erro.message });
     }
   }
 
   async obterTodos(req, res) {
+    const { status_adocao_id } = req.query;
+    const where = {};
+
+    if (status_adocao_id) {
+      where.status_adocao_id = status_adocao_id;
+    }
+
     try {
-      const adocoes = await database.Adocao.findAll();
+      const adocoes = await database.Adocao.findAll({
+        where,
+        include: [
+          {
+            model: database.Pessoa,
+            as: 'pessoa',
+            attributes: ['id', 'nome'],
+          },
+          {
+            model: database.Animal,
+            as: 'animal',
+            attributes: ['id', 'nome'],
+          },
+          {
+            model: database.StatusAdocao,
+            as: 'status_adocao',
+            attributes: ['id', 'nome'],
+          },
+        ],
+      });
+
       return res.status(200).json(adocoes);
     } catch (error) {
-      return res.status(500).json(error.message);
+      return res.status(500).json({ error: error.message });
     }
   }
 
@@ -75,14 +95,33 @@ class AdocaoController {
     const { id } = req.params;
 
     try {
-      const adocao = await database.Adocao.findOne({ where: { id } });
+      const adocao = await database.Adocao.findOne({
+        where: { id },
+        include: [
+          {
+            model: database.Pessoa,
+            as: 'pessoa',
+            attributes: ['id', 'nome'],
+          },
+          {
+            model: database.Animal,
+            as: 'animal',
+            attributes: ['id', 'nome'],
+          },
+          {
+            model: database.StatusAdocao,
+            as: 'status_adocao',
+            attributes: ['id', 'nome'],
+          },
+        ],
+      });
 
       if (!adocao)
-        return res.status(404).json({ error: "Adocão não encontrada" });
+        return res.status(404).json({ error: "Adoção não encontrada" });
 
       return res.status(200).json(adocao);
     } catch (erro) {
-      return res.status(500).json(erro.message);
+      return res.status(500).json({ error: erro.message });
     }
   }
 
@@ -91,10 +130,9 @@ class AdocaoController {
     try {
       await database.Adocao.destroy({ where: { id: id } });
 
-      res.status(200).json({ message: "Adoção excluida com sucesso" });
+      res.status(200).json({ message: "Adoção excluída com sucesso" });
     } catch (erro) {
-      console.log("Erro ao tentar excluir adocão: ", erro.message);
-      res.status(500).json(erro.message);
+      res.status(500).json({ error: erro.message });
     }
   }
 }

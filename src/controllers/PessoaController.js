@@ -1,5 +1,7 @@
 const database = require("../database/models");
 const { Op } = require("sequelize");
+const bcrypt = require("bcryptjs");
+const { hash } = require("bcryptjs");
 class PessoaController {
   async obterTodos(req, res) {
     try {
@@ -41,43 +43,110 @@ class PessoaController {
     }
   }
 
-  async adicionar(req, res) {
-    const pessoa = req.body;
+  async obterCuidadores(req, res) {
     try {
+      const cuidadores = await database.Pessoa.findAll({
+        where: { cuidador: true },
+        attributes: ['id', 'nome'],
+      });
+
+      return res.status(200).json(cuidadores);
+    } catch (error) {
+      return res.status(500).json({ error: error.message || "Erro no servidor" });
+    }
+  }
+  
+  async adicionar(req, res) {
+    const pessoaData = req.body;
+    const transaction = await database.sequelize.transaction();
+    try {
+      // Check if a person with the same CPF already exists
       const pessoaExistente = await database.Pessoa.findOne({
-        where: { cpf: pessoa.cpf },
+        where: { cpf: pessoaData.cpf },
       });
       if (pessoaExistente) {
-        return res
-          .status(400)
-          .json({ error: "Já existe uma pessoa com esse CPF." });
+        await transaction.rollback();
+        return res.status(400).json({ error: 'Já existe uma pessoa com esse CPF.' });
       }
-      const novaPessoa = await database.Pessoa.create(pessoa);
+
+      // Initialize 'usuario_id' to null
+      let usuarioId = null;
+
+      // If 'usuario' data is provided
+      if (pessoaData.usuario) {
+        // Check if email is already in use
+        const usuarioExistente = await database.Usuario.findOne({
+          where: { email: pessoaData.usuario.email },
+        });
+        if (usuarioExistente) {
+          await transaction.rollback();
+          return res.status(400).json({ error: 'Email já está em uso.' });
+        }
+
+        // Create the Usuario (password hashing handled in model hook)
+        const novoUsuario = await database.Usuario.create(
+          {
+            nome: pessoaData.usuario.nome,
+            email: pessoaData.usuario.email,
+            senha: pessoaData.usuario.senha,
+            tipo_usuario_id: 3, // Assuming 3 is the default user type
+          },
+          { transaction }
+        );
+        usuarioId = novoUsuario.id;
+      }
+
+      // Create the Pessoa, including 'usuario_id' if we have one
+      const novaPessoa = await database.Pessoa.create(
+        {
+          nome: pessoaData.nome,
+          cpf: pessoaData.cpf,
+          sexo: pessoaData.sexo,
+          data_nascimento: pessoaData.data_nascimento,
+          cuidador: pessoaData.cuidador,
+          status: pessoaData.status,
+          usuario_id: usuarioId,
+        },
+        { transaction }
+      );
+
       if (!novaPessoa) {
-        return res
-          .status(500)
-          .json({ error: "Não foi possível cadastrar pessoa" });
+        await transaction.rollback();
+        return res.status(500).json({ error: 'Não foi possível cadastrar pessoa' });
       }
-      if (pessoa.contatos && pessoa.contatos.length > 0) {
-        let contatos = pessoa.contatos.map((contato) => {
-          return {
-            ...contato,
-            pessoa_id: novaPessoa.id,
-          };
-        });
-        novaPessoa.contatos = await database.Contato.bulkCreate(contatos);
+
+      // Create contatos
+      if (pessoaData.contatos && pessoaData.contatos.length > 0) {
+        const contatos = pessoaData.contatos.map((contato) => ({
+          ...contato,
+          pessoa_id: novaPessoa.id,
+        }));
+        await database.Contato.bulkCreate(contatos, { transaction });
       }
-      if (pessoa.enderecos && pessoa.enderecos.length > 0) {
-        let enderecos = pessoa.enderecos.map((endereco) => {
-          return {
-            ...endereco,
-            pessoa_id: novaPessoa.id,
-          };
-        });
-        novaPessoa.enderecos = await database.Endereco.bulkCreate(enderecos);
+
+      // Create enderecos
+      if (pessoaData.enderecos && pessoaData.enderecos.length > 0) {
+        const enderecos = pessoaData.enderecos.map((endereco) => ({
+          ...endereco,
+          pessoa_id: novaPessoa.id,
+        }));
+        await database.Endereco.bulkCreate(enderecos, { transaction });
       }
-      return res.status(201).json(novaPessoa);
+
+      await transaction.commit();
+
+      // Fetch the created person with associated data
+      const pessoaCriada = await database.Pessoa.findByPk(novaPessoa.id, {
+        include: [
+          { model: database.Usuario, as: 'usuario', attributes: ['id', 'nome', 'email', 'tipo_usuario_id'] },
+          { model: database.Contato, as: 'contatos' },
+          { model: database.Endereco, as: 'enderecos' },
+        ],
+      });
+
+      return res.status(201).json(pessoaCriada);
     } catch (erro) {
+      await transaction.rollback();
       return res.status(500).json({ error: erro.message });
     }
   }
@@ -289,7 +358,7 @@ class PessoaController {
       if (contato.status === false) {
         await contato.update({
           status: true,
-          deletedAt: null, // Limpa o campo deletedAt
+          // deletedAt: null, // Limpa o campo deletedAt
         });
         return res.status(200).json({
           message: "Contato reativado com sucesso",

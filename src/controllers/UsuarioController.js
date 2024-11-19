@@ -68,18 +68,18 @@ class UsuarioController {
     const id = req.params.id;
     const dados = req.body;
     try {
-      if (dados.email) {
-        const usuarioExistente = await database.Usuario.findOne({
-          where: {
-            email: dados.email,
-          },
-        });
-        if (usuarioExistente) {
-          return res.status(400).json({
-            error: "Esse e-mail já está em uso.",
-          });
-        }
-      }
+      // if (dados.email) {
+      //   const usuarioExistente = await database.Usuario.findOne({
+      //     where: {
+      //       email: dados.email,
+      //     },
+      //   });
+      //   if (usuarioExistente) {
+      //     return res.status(400).json({
+      //       error: "Esse e-mail já está em uso.",
+      //     });
+      //   }
+      // }
       if (dados.senha) {
         dados.senha = await hash(dados.senha, 10);
       }
@@ -127,11 +127,29 @@ class UsuarioController {
     try {
       const usuario = await database.Usuario.findOne({
         where: { email: email },
+        include: [
+          {
+            model: database.Pessoa,
+            as: 'pessoa',
+            attributes: ['id'],
+          },
+        ],
       });
       if (!usuario) {
         return res.status(404).json({ error: "Usuário não encontrado" });
       }
-      return res.status(200).json(usuario);
+
+      const responseData = {
+        id: usuario.id,
+        nome: usuario.nome,
+        email: usuario.email,
+        tipo_usuario_id: usuario.tipo_usuario_id,
+        status: usuario.status,
+        pergunta: usuario.pergunta,
+        pessoa_id: usuario.pessoa ? usuario.pessoa.id : null,
+      };
+
+      return res.status(200).json(responseData);
     } catch (error) {
       return res.status(500).json({ mensagem: error.message });
     }
@@ -218,7 +236,7 @@ class UsuarioController {
         .status(200)
         .json({ message: "Pergunta e resposta definidas com sucesso" });
     } catch (erro) {
-      return res.status(500).json({ error: erro.message });
+      return res.status(500).json({ error: erro });
     }
   }
 

@@ -7,18 +7,20 @@ module.exports = (sequelize, DataTypes) => {
       Animal.belongsTo(models.StatusAnimal, {
         foreignKey: "status_animal_id",
         as: "statusAnimal",
-        allowNull: false,
       });
       Animal.belongsTo(models.Especie, {
         foreignKey: "especie_id",
         as: "especie",
-        allowNull: false,
       });
       Animal.belongsToMany(models.Pessoa, {
         through: models.Adocao,
         foreignKey: "animal_id",
         otherKey: "pessoa_id",
         as: "pessoas",
+      });
+      Animal.belongsTo(models.Pessoa, {
+        foreignKey: "responsavel_id",
+        as: "responsavel",
       });
     }
   }
@@ -56,7 +58,23 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "StatusAnimal",
+          model: "status_animais",
+          key: "id",
+        },
+      },
+      especie_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "especies",
+          key: "id",
+        },
+      },
+      responsavel_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "pessoas",
           key: "id",
         },
       },
