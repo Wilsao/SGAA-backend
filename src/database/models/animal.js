@@ -4,23 +4,30 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Animal extends Model {
     static associate(models) {
+      // Relacionamento com StatusAnimal
       Animal.belongsTo(models.StatusAnimal, {
         foreignKey: "status_animal_id",
-        as: "statusAnimal",
+        as: "statusAnimal", // Alias claro e único
       });
+
+      // Relacionamento com Especie
       Animal.belongsTo(models.Especie, {
         foreignKey: "especie_id",
-        as: "especie",
+        as: "especie", // Alias claro e único
       });
+
+      // Relacionamento muitos-para-muitos com Pessoa via Adocao
       Animal.belongsToMany(models.Pessoa, {
         through: models.Adocao,
         foreignKey: "animal_id",
         otherKey: "pessoa_id",
-        as: "pessoas",
+        as: "adotantes", // Alias mais descritivo para o contexto de adoção
       });
+
+      // Relacionamento um-para-um com Pessoa como responsável
       Animal.belongsTo(models.Pessoa, {
         foreignKey: "responsavel_id",
-        as: "responsavel",
+        as: "responsavel", // Alias claro e único
       });
     }
   }

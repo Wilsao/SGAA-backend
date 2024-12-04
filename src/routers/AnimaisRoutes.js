@@ -8,6 +8,8 @@ router.put("/animal/:id", autenticado, AnimalController.atualizar); // ESTÁ NO 
 router.delete("/animal/:id", autenticado, AnimalController.deletar); // ESTÁ NO POSTMAN (Deletar animal - testado - com validações)
 
 //ROTAS **NÃO** AUTENTICADAS
+router.get("/animal/relatorio", AnimalController.relatorio);
+router.get("/animal/relatorio/pdf", AnimalController.relatorioPDF);
 router.get("/animal", AnimalController.obterTodos); // ESTÁ NO POSTMAN (Listar animais - testado - com validações)
 router.get("/animal/:id", AnimalController.obterPorId); // ESTÁ NO POSTMAN (Buscar animal por ID - testado - com validações)
 router.get("/animal/filtrar/:termobusca", AnimalController.filtrar); // ESTÁ NO POSTMAN (Buscar animal por nome, cor/pelagem, baia, chip, deficiência e condição resgate - testado - com validações)

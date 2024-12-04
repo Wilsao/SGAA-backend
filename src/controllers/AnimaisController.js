@@ -1,7 +1,8 @@
 const database = require("../database/models");
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 const path = require("path");
 const fs = require("fs");
+const PDFDocument = require('pdfkit');
 
 class AnimaisController {
   async obterTodos(req, res) {
@@ -191,25 +192,184 @@ class AnimaisController {
   async deletarImagem(req, res) {
     try {
       const { key } = req.params;
-  
+
       const imagem = await database.Imagem.findOne({ where: { key } });
       if (!imagem) {
         return res.status(404).json({ error: 'Imagem não encontrada.' });
       }
-  
+
       const filePath = path.resolve('uploads', key);
       fs.unlink(filePath, (err) => {
         if (err) {
           console.error('Erro ao deletar arquivo:', err);
         }
       });
-  
+
       await imagem.destroy();
-  
+
       return res.status(200).json({ message: 'Imagem excluída com sucesso.' });
     } catch (error) {
       console.error('Erro ao excluir imagem:', error);
       return res.status(500).json({ error: error.message });
+    }
+  }
+
+  async relatorio(req, res) {
+    const { dataInicio, dataFim, sexo, especie_id, status_animal_id } = req.query;
+
+    const filtro = {};
+
+    if (dataInicio) {
+      filtro.createdAt = {
+        ...filtro.createdAt,
+        [Op.gte]: new Date(dataInicio),
+      };
+    }
+
+    if (dataFim) {
+      filtro.createdAt = {
+        ...filtro.createdAt,
+        [Op.lte]: new Date(dataFim),
+      };
+    }
+
+    if (sexo) {
+      filtro.sexo = {
+        [Op.like]: `%${sexo}%`,
+      };
+    }
+
+    if (status_animal_id) {
+      filtro.status_animal_id = status_animal_id;
+    }
+
+    if (especie_id) {
+      filtro.especie_id = especie_id;
+    }
+
+    try {
+      const animais = await database.Animal.findAll({
+        where: filtro,
+        include: [
+          {
+            model: database.Pessoa,
+            as: 'responsavel', // Usa o alias definido na associação `responsavel`
+            attributes: ['id', 'nome'],
+          },
+          {
+            model: database.Pessoa,
+            as: 'adotantes', // Usa o alias definido na associação `adotantes` (muitos-para-muitos)
+            attributes: ['id', 'nome'],
+            through: { attributes: [] }, // Exclui campos da tabela pivô `Adocao` (se necessário)
+          },
+          {
+            model: database.StatusAnimal,
+            as: 'statusAnimal', // Alias definido para o status
+            attributes: ['id', 'nome'],
+          },
+          {
+            model: database.Especie,
+            as: 'especie', // Alias definido para a espécie
+            attributes: ['id', 'nome'],
+          },
+        ],
+      });
+
+      return res.status(200).json(animais);
+    } catch (erro) {
+      return res.status(500).json(erro.message);
+    }
+  }
+
+  async relatorioPDF(req, res) {
+    const { dataInicio, dataFim, sexo, especie_id, status_animal_id } = req.query;
+
+    const filtro = {};
+
+    if (dataInicio) {
+      filtro.createdAt = {
+        ...filtro.createdAt,
+        [Op.gte]: new Date(dataInicio),
+      };
+    }
+
+    if (dataFim) {
+      filtro.createdAt = {
+        ...filtro.createdAt,
+        [Op.lte]: new Date(dataFim),
+      };
+    }
+
+    if (sexo) {
+      filtro.sexo = {
+        [Op.like]: `%${sexo}%`,
+      };
+    }
+
+    if (status_animal_id) {
+      filtro.status_animal_id = status_animal_id;
+    }
+
+    if (especie_id) {
+      filtro.especie_id = especie_id;
+    }
+
+    try {
+      const animais = await database.Animal.findAll({
+        where: filtro,
+        include: [
+          {
+            model: database.Pessoa,
+            as: 'responsavel',
+            attributes: ['id', 'nome'],
+          },
+          {
+            model: database.Pessoa,
+            as: 'adotantes',
+            attributes: ['id', 'nome'],
+            through: { attributes: [] },
+          },
+          {
+            model: database.StatusAnimal,
+            as: 'statusAnimal',
+            attributes: ['id', 'nome'],
+          },
+          {
+            model: database.Especie,
+            as: 'especie',
+            attributes: ['id', 'nome'],
+          },
+        ],
+      });
+
+      // Configura o cabeçalho HTTP para envio do PDF
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename=relatorio_animais.pdf');
+
+      // Criação do PDF
+      const doc = new PDFDocument();
+      doc.pipe(res); // Envia o PDF diretamente para a resposta HTTP
+
+      // Adiciona título e informações gerais
+      doc.fontSize(18).text('Relatório de Animais', { align: 'center' }).moveDown();
+      doc.fontSize(12).text(`Período: ${dataInicio || 'Não especificado'} a ${dataFim || 'Não especificado'}`).moveDown();
+
+      // Adiciona informações de cada animal
+      animais.forEach((animal, index) => {
+        doc.fontSize(14).text(`Animal ${index + 1}`);
+        doc.fontSize(12).text(`ID: ${animal.id}`);
+        doc.text(`Nome: ${animal.nome}`);
+        doc.text(`Sexo: ${animal.sexo}`);
+        doc.text(`Espécie: ${animal.especie?.nome || 'Não especificado'}`);
+        doc.text(`Status: ${animal.statusAnimal?.nome || 'Não especificado'}`);
+        doc.text(`Responsável: ${animal.responsavel?.nome || 'Não especificado'}`);
+        doc.moveDown();
+      });
+
+      // Finaliza o documento e envia a resposta
+      doc.end();
+    } catch (erro) {
+      res.status(500).json({ message: erro.message });
     }
   }
 }

@@ -8,7 +8,9 @@ router.use(fileUpload());
 
 // Rotas para formulários de adoção
 //ROTAS **NÃO** AUTENTICADAS
-router.post('/adocao/aplicar', AdocaoController.adicionar); 
+router.get('/adocao/relatorio', AdocaoController.relatorio);
+router.get('/adocao/relatorio/pdf', AdocaoController.relatorioPdf);
+router.post('/adocao/aplicar', AdocaoController.adicionar);
 router.get('/adocao', AdocaoController.obterTodos);
 router.get('/adocao/:id', AdocaoController.obterPorId);
 router.put('/adocao/:id', AdocaoController.atualizar);

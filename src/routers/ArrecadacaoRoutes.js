@@ -5,6 +5,8 @@ const autenticado = require('../middleware/autenticado.js');
 const router = Router();
 
 //ROTAS AUTENTICADAS
+router.get('/arrecadacao/relatorio', ArrecadacaoController.relatorio);
+router.get('/arrecadacao/relatorio/pdf', ArrecadacaoController.relatorioPdf);
 router.get('/arrecadacao', autenticado, ArrecadacaoController.obterTodos);  // ESTÁ NO POSTMAN (Listar arrecadacoes - testado - com validações)
 router.get('/arrecadacao/:id', autenticado, ArrecadacaoController.obterPorId); // ESTÁ NO POSTMAN (Buscar arrecadacao por ID - testado - com validações)
 router.post('/arrecadacao', autenticado, ArrecadacaoController.adicionar);  // ESTÁ NO POSTMAN (Cadastrar arrecadacao - testado - com validações)

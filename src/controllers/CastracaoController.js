@@ -1,5 +1,6 @@
 const database = require("../database/models");
 const { Op } = require("sequelize");
+const PDFDocument = require('pdfkit');
 
 class CastracaoController {
   async obterTodos(req, res) {
@@ -84,6 +85,133 @@ class CastracaoController {
       return res.status(200).json(castracoes);
     } catch (erro) {
       return res.status(500).json(erro.message);
+    }
+  }
+
+  async relatorio(req, res) {
+    const { dataInicio, dataFim } = req.query;
+
+    if (!dataInicio || !dataFim)
+      return res.status(400).json({ error: 'Os parâmetros dataInicio e dataFim são obrigatórios.' });
+
+    try {
+      const castracoes = await database.Castracao.findAll({
+        where: {
+          createdAt: {
+            [Op.gte]: new Date(dataInicio),
+            [Op.lte]: new Date(dataFim),
+          },
+        },
+
+        include: [
+          {
+            model: database.Animal,
+            as: "Animal",
+            attributes: ["id", "nome"],
+            include: [{
+              model: database.StatusAnimal,
+              as: "statusAnimal",
+              attributes: ["id", "nome"],
+            }]
+          },
+          {
+            model: database.Especie,
+            as: "Especie",
+            attributes: ["id", "nome"],
+          },
+          {
+            model: database.Usuario,
+            as: "Usuario",
+            attributes: ["id", "nome"],
+          }
+        ],
+      });
+
+      return res.status(200).json(castracoes);
+    } catch (erro) {
+      return res.status(500).json(erro.message);
+    }
+  }
+
+  async relatorioPdf(req, res) {
+    const { dataInicio, dataFim } = req.query;
+
+    if (!dataInicio || !dataFim) {
+      return res.status(400).json({ error: 'Os parâmetros dataInicio e dataFim são obrigatórios.' });
+    }
+
+    try {
+      const castracoes = await database.Castracao.findAll({
+        where: {
+          createdAt: {
+            [Op.gte]: new Date(dataInicio),
+            [Op.lte]: new Date(dataFim),
+          },
+        },
+        include: [
+          {
+            model: database.Animal,
+            as: 'Animal',
+            attributes: ['id', 'nome'],
+            include: [
+              {
+                model: database.StatusAnimal,
+                as: 'statusAnimal',
+                attributes: ['id', 'nome'],
+              },
+            ],
+          },
+          {
+            model: database.Especie,
+            as: 'Especie',
+            attributes: ['id', 'nome'],
+          },
+          {
+            model: database.Usuario,
+            as: 'Usuario',
+            attributes: ['id', 'nome'],
+          },
+        ],
+      });
+
+      // Configuração do PDF
+      const doc = new PDFDocument();
+      const filename = `relatorio-castracoes-${Date.now()}.pdf`;
+
+      // Configuração dos cabeçalhos HTTP
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+      // Cabeçalho do documento
+      doc.fontSize(16).text('Relatório de Castrações', { align: 'center' });
+      doc.fontSize(12).text(`Período: ${dataInicio} a ${dataFim}`, { align: 'center' });
+      doc.moveDown();
+
+      // Cabeçalho da tabela
+      doc.fontSize(12).text('ID Castração', 50, doc.y, { continued: true });
+      doc.text('Animal', 150, doc.y, { continued: true });
+      doc.text('Status Animal', 250, doc.y, { continued: true });
+      doc.text('Espécie', 350, doc.y, { continued: true });
+      doc.text('Usuário', 450, doc.y);
+      doc.moveDown();
+
+      // Preenchimento da tabela
+      castracoes.forEach((castracao) => {
+        const { id, createdAt, Animal, Especie, Usuario } = castracao;
+
+        doc.text(id, 50, doc.y, { continued: true });
+        doc.text(Animal?.nome || '-', 150, doc.y, { continued: true });
+        doc.text(Animal?.statusAnimal?.nome || '-', 250, doc.y, { continued: true });
+        doc.text(Especie?.nome || '-', 350, doc.y, { continued: true });
+        doc.text(Usuario?.nome || '-', 450, doc.y);
+        doc.moveDown();
+      });
+
+      // Finaliza e envia o documento
+      doc.pipe(res);
+      doc.end();
+    } catch (erro) {
+      return res.status(500).json({ error: erro.message });
     }
   }
 }

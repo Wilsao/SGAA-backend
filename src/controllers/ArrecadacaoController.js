@@ -1,5 +1,6 @@
 const database = require("../database/models");
 const { Op } = require("sequelize");
+const PDFDocument = require('pdfkit');
 
 class ArrecadacaoController {
   async obterTodos(req, res) {
@@ -105,6 +106,98 @@ class ArrecadacaoController {
       return res.status(200).json(arrecadacoes);
     } catch (erro) {
       return res.status(500).json(erro.message);
+    }
+  }
+
+  async relatorio(req, res) {
+    const { dataInicio, dataFim } = req.query;
+
+    if (!dataInicio || !dataFim) {
+      return res.status(400).json({ error: 'Os parâmetros dataInicio e dataFim são obrigatórios.' });
+    }
+
+    try {
+      const arrecadacoes = await database.Arrecadacao.findAll({
+        where: {
+          createdAt: {
+            [Op.gte]: new Date(dataInicio),
+            [Op.lte]: new Date(dataFim),
+          },
+        },
+
+        include: [
+          {
+            model: database.Usuario,
+            as: "Usuario",
+            attributes: ["id", "nome"],
+          }
+        ],
+      });
+
+      return res.status(200).json(arrecadacoes);
+    } catch (erro) {
+      return res.status(500).json(erro.message);
+    }
+  }
+
+  async relatorioPdf(req, res) {
+    const { dataInicio, dataFim } = req.query;
+
+    if (!dataInicio || !dataFim) {
+      return res.status(400).json({ error: 'Os parâmetros dataInicio e dataFim são obrigatórios.' });
+    }
+
+    try {
+      const arrecadacoes = await database.Arrecadacao.findAll({
+        where: {
+          createdAt: {
+            [Op.gte]: new Date(dataInicio),
+            [Op.lte]: new Date(dataFim),
+          },
+        },
+        include: [
+          {
+            model: database.Usuario,
+            as: 'Usuario',
+            attributes: ['id', 'nome'],
+          },
+        ],
+      });
+
+      // Configuração do PDF
+      const doc = new PDFDocument();
+      const filename = `relatorio-arrecadacoes-${Date.now()}.pdf`;
+
+      // Configuração dos cabeçalhos HTTP
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+      // Cabeçalho do documento
+      doc.fontSize(16).text('Relatório de Arrecadações', { align: 'center' });
+      doc.fontSize(12).text(`Período: ${dataInicio} a ${dataFim}`, { align: 'center' });
+      doc.moveDown();
+
+      // Cabeçalho da tabela
+      doc.fontSize(12).text('ID', 50, doc.y, { continued: true });
+      doc.text('Usuário', 150, doc.y, { continued: true });
+      doc.text('Data de Criação', 300, doc.y);
+      doc.moveDown();
+
+      // Preenchimento da tabela
+      arrecadacoes.forEach((arrecadacao) => {
+        const { id, createdAt, Usuario } = arrecadacao;
+
+        doc.text(id, 50, doc.y, { continued: true });
+        doc.text(Usuario.nome, 150, doc.y, { continued: true });
+        doc.text(new Date(createdAt).toLocaleString(), 300, doc.y);
+        doc.moveDown();
+      });
+
+      // Finaliza e envia o documento
+      doc.pipe(res);
+      doc.end();
+    } catch (erro) {
+      return res.status(500).json({ error: erro.message });
     }
   }
 }
