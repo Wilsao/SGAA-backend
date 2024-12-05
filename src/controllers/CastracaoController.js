@@ -5,7 +5,18 @@ const PDFDocument = require('pdfkit');
 class CastracaoController {
   async obterTodos(req, res) {
     try {
-      const castracoes = await database.Castracao.findAll();
+      const now = new Date();
+      const inicio = new Date();
+      inicio.setDate(now.getDate() - 30);
+
+      const castracoes = await database.Castracao.findAll({
+        where: {
+          createdAt: {
+            [Op.gte]: inicio, // 1 dia atrás
+            [Op.lte]: now, // Agora
+          },
+        },
+      });
 
       if (!castracoes)
         return res.status(404).json({ error: "Castracoes não encontradas" });

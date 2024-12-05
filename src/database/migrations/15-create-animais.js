@@ -18,7 +18,7 @@ module.exports = {
           key: "id",
         },
         onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+        onDelete: "RESTRICT",
       },
       especie_id: {
         allowNull: false,
@@ -28,7 +28,7 @@ module.exports = {
           key: "id",
         },
         onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+        onDelete: "RESTRICT",
       },
       responsavel_id: {
         type: Sequelize.INTEGER,

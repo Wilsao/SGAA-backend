@@ -7,7 +7,7 @@ const router = Router();
 //ROTAS AUTENTICADAS
 router.get('/castracao/relatorio', CastracaoController.relatorio);
 router.get('/castracao/relatorio/pdf', CastracaoController.relatorioPdf);
-router.get('/castracao', autenticado, CastracaoController.obterTodos); // ESTÁ NO POSTMAN (Listar castracoes - testado - com validações)
+router.get('/castracao', CastracaoController.obterTodos); // ESTÁ NO POSTMAN (Listar castracoes - testado - com validações)
 router.get('/castracao/:id', autenticado, CastracaoController.obterPorId); // ESTÁ NO POSTMAN (Buscar castracao por ID - testado - com validações)
 router.post('/castracao', autenticado, CastracaoController.inserir); // ESTÁ NO POSTMAN (Cadastrar castracao - testado - com validações)
 router.put('/castracao/:id', autenticado, CastracaoController.atualizar); // ESTÁ NO POSTMAN (Editar castracao - testado - com validações)

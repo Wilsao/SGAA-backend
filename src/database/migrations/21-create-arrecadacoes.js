@@ -13,25 +13,25 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'usuarios', 
+          model: 'usuarios',
           key: 'id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE', 
+        onDelete: "RESTRICT"
       },
       nome_evento: {
         type: Sequelize.STRING,
-        allowNull: false, 
+        allowNull: false,
       },
       data_evento: {
         type: Sequelize.DATE,
-        allowNull: false, 
+        allowNull: false,
         defaultValue: Sequelize.NOW,
       },
       valor_arrecadado: {
-        type: Sequelize.DECIMAL,
-        allowNull: false, 
-        defaultValue: 0,
+        type: Sequelize.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 0.00,
       },
       descricao: {
         type: Sequelize.STRING,

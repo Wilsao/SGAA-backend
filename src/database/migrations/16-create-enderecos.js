@@ -15,6 +15,8 @@ module.exports = {
           model: 'pessoas',
           key: 'id',
         },
+        onDelete: "RESTRICT",
+        onUpdate: "CASCADE",
       },
       status: {
         type: Sequelize.BOOLEAN,

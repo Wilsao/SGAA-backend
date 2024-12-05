@@ -13,30 +13,30 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'especies', 
+          model: 'especies',
           key: 'id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE', 
+        onDelete: "RESTRICT"
       },
       usuario_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'usuarios', 
+          model: 'usuarios',
           key: 'id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE', 
+        onDelete: "RESTRICT"
       },
       animal_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'animais', 
+          model: 'animais',
           key: 'id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE', 
+        onDelete: "RESTRICT"
       },
       local_evento: {
         type: Sequelize.STRING,
@@ -46,17 +46,17 @@ module.exports = {
       },
       data_evento: {
         type: Sequelize.DATE,
-        allowNull: false, 
+        allowNull: false,
       },
       quantidade_macho: {
         type: Sequelize.INTEGER,
         defaultValue: 0,
-        allowNull: false, 
+        allowNull: false,
       },
       quantidade_femea: {
         type: Sequelize.INTEGER,
         defaultValue: 0,
-        allowNull: false, 
+        allowNull: false,
       },
       status: {
         type: Sequelize.BOOLEAN,

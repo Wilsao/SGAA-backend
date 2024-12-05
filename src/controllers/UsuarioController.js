@@ -1,7 +1,6 @@
 const database = require("../database/models");
 const { hash } = require("bcryptjs");
 const bcrypt = require("bcryptjs");
-const usuarioDTO = require("../dtos/usuario/usuarioDTO");
 
 class UsuarioController {
   async obterTodos(req, res) {
@@ -24,6 +23,8 @@ class UsuarioController {
 
       if (!usuario)
         return res.status(404).json({ error: "Usuario não encontrado" });
+
+      usuario.senha = bcrypt.decrypt(usuario.senha);
 
       return res.status(200).json(usuario);
     } catch (error) {
@@ -223,11 +224,11 @@ class UsuarioController {
           .status(400)
           .json({ error: "Esse usuário já possui uma resposta cadastrada" });
       }
-      const respostaHasheada = await hash(resposta, 10);
+      // const respostaHasheada = await hash(resposta, 10);
       await database.Usuario.update(
         {
           pergunta: pergunta,
-          resposta: respostaHasheada,
+          resposta: resposta,
           updatedAt: new Date(),
         },
         { where: { id: usuario_id } }
@@ -251,11 +252,11 @@ class UsuarioController {
       if (!usuario) {
         return res.status(404).json({ error: "Usuário não encontrado" });
       }
-      const respostaHasheada = await hash(resposta, 10);
+      // const respostaHasheada = await hash(resposta, 10);
       await database.Usuario.update(
         {
           pergunta: pergunta,
-          resposta: respostaHasheada,
+          resposta: resposta,
           updatedAt: new Date(),
         },
         { where: { id: usuario_id } }

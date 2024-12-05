@@ -5,7 +5,18 @@ const PDFDocument = require('pdfkit');
 class ArrecadacaoController {
   async obterTodos(req, res) {
     try {
-      const arrecadacoes = await database.Arrecadacao.findAll();
+      const now = new Date();
+      const inicio = new Date();
+      inicio.setDate(now.getDate() - 30); // Subtrai 1 dia
+
+      const arrecadacoes = await database.Arrecadacao.findAll({
+        where: {
+          createdAt: {
+            [Op.gte]: inicio, // 1 dia atrás
+            [Op.lte]: now, // Agora
+          },
+        },
+      });
 
       if (!arrecadacoes)
         return res.status(404).json({ error: "Arrecadacoes não encontradas" });
