@@ -24,8 +24,6 @@ class UsuarioController {
       if (!usuario)
         return res.status(404).json({ error: "Usuario não encontrado" });
 
-      usuario.senha = bcrypt.decrypt(usuario.senha);
-
       return res.status(200).json(usuario);
     } catch (error) {
       return res.status(500).json({ mensagem: error.message });
