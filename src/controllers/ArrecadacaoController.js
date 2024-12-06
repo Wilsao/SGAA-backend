@@ -175,6 +175,15 @@ class ArrecadacaoController {
         ],
       });
 
+      const totalArrecadacoes = await database.Arrecadacao.sum('valor_arrecadado', {
+        where: {
+          createdAt: {
+            [Op.gte]: new Date(dataInicio),
+            [Op.lte]: new Date(dataFim),
+          },
+        }
+      });
+
       // Configuração do PDF
       const doc = new PDFDocument();
       const filename = `relatorio-arrecadacoes-${Date.now()}.pdf`;
@@ -185,23 +194,59 @@ class ArrecadacaoController {
 
       // Cabeçalho do documento
       doc.fontSize(16).text('Relatório de Arrecadações', { align: 'center' });
-      doc.fontSize(12).text(`Período: ${dataInicio} a ${dataFim}`, { align: 'center' });
+      doc.moveDown(2);  // Espaço entre título e tabela
+
+      // Tabela com informações iniciais
+      doc.fontSize(12).font('Helvetica-Bold');
+      doc.text('Total Arrecadado:', 50, doc.y, { continued: true });
+      doc.text(`R$ ${parseFloat(totalArrecadacoes).toFixed(2)}`, 200, doc.y);
       doc.moveDown();
 
-      // Cabeçalho da tabela
-      doc.fontSize(12).text('ID', 50, doc.y, { continued: true });
-      doc.text('Usuário', 150, doc.y, { continued: true });
-      doc.text('Data de Criação', 300, doc.y);
+      doc.text('Número de Arrecadações:', 50, doc.y, { continued: true });
+      doc.text(`${arrecadacoes.length}`, 200, doc.y);
       doc.moveDown();
 
-      // Preenchimento da tabela
-      arrecadacoes.forEach((arrecadacao) => {
-        const { id, createdAt, Usuario } = arrecadacao;
+      doc.text('Período:', 50, doc.y, { continued: true });
+      doc.text(`${new Date(dataInicio).toLocaleString()} a ${new Date(dataFim).toLocaleString()}`, 200, doc.y);
+      doc.moveDown(2);
 
-        doc.text(id, 50, doc.y, { continued: true });
-        doc.text(Usuario.nome, 150, doc.y, { continued: true });
-        doc.text(new Date(createdAt).toLocaleString(), 300, doc.y);
+      // Cabeçalho da tabela de arrecadações
+      doc.fontSize(12).font('Helvetica-Bold');
+      doc.text('ID', 50, doc.y, { width: 50, align: 'center' });
+      doc.text('Usuário', 150, doc.y, { width: 150, align: 'center' });
+      doc.text('Valor Arrecadado', 300, doc.y, { width: 100, align: 'center' });
+      doc.text('Data de Criação', 400, doc.y, { width: 150, align: 'center' });
+      doc.moveDown();
+
+      // Desenhando as linhas horizontais de separação
+      doc.moveTo(50, doc.y)  // Linha de separação do cabeçalho
+        .lineTo(550, doc.y)
+        .stroke();
+      doc.moveDown();
+
+      // Preenchimento da tabela com as arrecadações
+      arrecadacoes.forEach((arrecadacao, index) => {
+        const { id, Usuario, valor_arrecadado, createdAt } = arrecadacao;
+
+        // Converte valor_arrecadado para número e formata com duas casas decimais
+        const valorFormatado = parseFloat(valor_arrecadado).toFixed(2);
+
+        const startY = doc.y + 10; // Define a posição Y para cada linha
+
+        // Desenhando as células da tabela para cada linha
+        doc.text(id, 50, startY, { width: 50, align: 'center' }); // ID
+        doc.text(Usuario.nome, 150, startY, { width: 150, align: 'center' }); // Nome do Usuário
+        doc.text(`R$ ${valorFormatado}`, 300, startY, { width: 100, align: 'center' }); // Valor arrecadado
+        doc.text(new Date(createdAt).toLocaleString(), 400, startY, { width: 150, align: 'center' }); // Data de criação
         doc.moveDown();
+      });
+
+      // Desenhando as linhas horizontais de separação para cada linha de arrecadação
+      arrecadacoes.forEach((_, index) => {
+        const startY = doc.y + 10;
+        doc.moveTo(50, startY)  // Linha de separação das linhas da tabela
+          .lineTo(550, startY)
+          .stroke();
       });
 
       // Finaliza e envia o documento
@@ -211,6 +256,9 @@ class ArrecadacaoController {
       return res.status(500).json({ error: erro.message });
     }
   }
+
+
+
 }
 
 module.exports = new ArrecadacaoController();

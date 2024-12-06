@@ -346,24 +346,56 @@ class AnimaisController {
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', 'attachment; filename=relatorio_animais.pdf');
 
-      // Criação do PDF
-      const doc = new PDFDocument();
+      // Criação do PDF com tamanho A4
+      const doc = new PDFDocument({ size: 'A4' });
       doc.pipe(res); // Envia o PDF diretamente para a resposta HTTP
 
       // Adiciona título e informações gerais
-      doc.fontSize(18).text('Relatório de Animais', { align: 'center' }).moveDown();
-      doc.fontSize(12).text(`Período: ${dataInicio || 'Não especificado'} a ${dataFim || 'Não especificado'}`).moveDown();
+      doc.fontSize(16).text('Relatório de Animais', { align: 'center' }).moveDown(1);
+      doc.fontSize(10).text(`Período: ${dataInicio || 'Não especificado'} a ${dataFim || 'Não especificado'}`).moveDown(1);
 
-      // Adiciona informações de cada animal
+      // Alinhar altura do cabeçalho da tabela
+      const headerY = doc.y; // Posição Y do cabeçalho
+
+      // Tabela com as informações dos animais
+      doc.fontSize(10).font('Helvetica-Bold');
+      doc.text('ID', 50, headerY, { width: 40, align: 'center' });
+      doc.text('Nome', 90, headerY, { width: 120, align: 'center' });
+      doc.text('Sexo', 210, headerY, { width: 40, align: 'center' });
+      doc.text('Espécie', 250, headerY, { width: 80, align: 'center' });
+      doc.text('Status', 330, headerY, { width: 60, align: 'center' });
+      doc.text('Responsável', 400, headerY, { width: 100, align: 'center' });
+      doc.moveDown(0.5);
+
+      // Desenhando a linha de separação do cabeçalho
+      doc.moveTo(50, headerY + 10) // Linha de separação
+        .lineTo(550, headerY + 10)
+        .stroke();
+      doc.moveDown(0.5);
+
+      // Preenchimento da tabela com os dados dos animais
       animais.forEach((animal, index) => {
-        doc.fontSize(14).text(`Animal ${index + 1}`);
-        doc.fontSize(12).text(`ID: ${animal.id}`);
-        doc.text(`Nome: ${animal.nome}`);
-        doc.text(`Sexo: ${animal.sexo}`);
-        doc.text(`Espécie: ${animal.especie?.nome || 'Não especificado'}`);
-        doc.text(`Status: ${animal.statusAnimal?.nome || 'Não especificado'}`);
-        doc.text(`Responsável: ${animal.responsavel?.nome || 'Não especificado'}`);
-        doc.moveDown();
+        const { id, nome, sexo, especie, statusAnimal, responsavel } = animal;
+
+        const startY = doc.y + 10; // Define a posição Y para cada linha
+
+        // Desenhando as células da tabela para cada linha
+        doc.text(id, 50, startY, { width: 40, align: 'center' });
+        doc.text(nome, 90, startY, { width: 120, align: 'center' });
+        doc.text(sexo, 210, startY, { width: 40, align: 'center' });
+        doc.text(especie?.nome || 'Não especificado', 250, startY, { width: 80, align: 'center' });
+        doc.text(statusAnimal?.nome || 'Não especificado', 330, startY, { width: 60, align: 'center' });
+        doc.text(responsavel?.nome || 'Não especificado', 400, startY, { width: 100, align: 'center' });
+
+        doc.moveDown(0.5);
+      });
+
+      // Desenhando as linhas horizontais de separação para cada linha de animal
+      animais.forEach(() => {
+        const startY = doc.y + 10;
+        doc.moveTo(50, startY) // Linha de separação das linhas da tabela
+          .lineTo(550, startY)
+          .stroke();
       });
 
       // Finaliza o documento e envia a resposta
@@ -372,6 +404,9 @@ class AnimaisController {
       res.status(500).json({ message: erro.message });
     }
   }
+
+
+
 }
 
 module.exports = new AnimaisController();

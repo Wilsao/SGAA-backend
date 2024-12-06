@@ -272,41 +272,57 @@ class AdocaoController {
       });
 
       // Criação do PDF
-      const doc = new PDFDocument();
-      const filename = `relatorio-${Date.now()}.pdf`;
+      const doc = new PDFDocument({ size: 'A4' });
+      const filename = `relatorio-adoções-${Date.now()}.pdf`;
 
-      // Cabeçalho
-      doc.fontSize(16).text('Relatório de Adoções', { align: 'center' });
-      doc.moveDown();
-
-      // Tabela
-      doc.fontSize(12);
-      doc.text('ID', 50, doc.y, { continued: true });
-      doc.text('Pessoa', 100, doc.y, { continued: true });
-      doc.text('Animal', 200, doc.y, { continued: true });
-      doc.text('Sexo', 300, doc.y, { continued: true });
-      doc.text('Espécie', 400, doc.y);
-
-      doc.moveDown();
-
-      // Preenchendo a tabela
-      arrecadacoes.forEach((adocao) => {
-        const { pessoa, animal } = adocao;
-
-        doc.text(adocao.id, 50, doc.y, { continued: true });
-        doc.text(pessoa.nome, 100, doc.y, { continued: true });
-        doc.text(animal.nome, 200, doc.y, { continued: true });
-        doc.text(animal.sexo, 300, doc.y, { continued: true });
-        doc.text(animal.especie.nome, 400, doc.y);
-
-        doc.moveDown();
-      });
-
-      // Finaliza o PDF e envia ao cliente
+      // Configuração dos cabeçalhos HTTP
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
 
-      doc.pipe(res); // Envia o PDF diretamente para o cliente
+      // Cabeçalho do documento
+      doc.fontSize(16).text('Relatório de Adoções', { align: 'center' }).moveDown(1);
+      doc.fontSize(10).text(`Período: ${dataInicio || 'Não especificado'} a ${dataFim || 'Não especificado'}`, { align: 'center' }).moveDown(2);
+
+      // Cabeçalho da tabela
+      const headerY = doc.y;
+      doc.fontSize(10).font('Helvetica-Bold');
+      doc.text('ID Adoção', 50, headerY, { width: 60, align: 'center' });
+      doc.text('Pessoa', 110, headerY, { width: 120, align: 'center' });
+      doc.text('Animal', 230, headerY, { width: 120, align: 'center' });
+      doc.text('Sexo', 350, headerY, { width: 50, align: 'center' });
+      doc.text('Espécie', 400, headerY, { width: 100, align: 'center' });
+
+      // Linha de separação do cabeçalho
+      doc.moveTo(50, headerY + 10)
+        .lineTo(550, headerY + 10)
+        .stroke();
+      doc.moveDown(0.5); // Espaço entre o cabeçalho e as linhas da tabela
+
+      // Preenchendo a tabela com as adoções
+      arrecadacoes.forEach((adocao) => {
+        const { pessoa, animal } = adocao;
+        const startY = doc.y + 10;
+
+        // Desenhando as células da tabela
+        doc.text(adocao.id, 50, startY, { width: 60, align: 'center' });
+        doc.text(pessoa.nome, 110, startY, { width: 120, align: 'center' });
+        doc.text(animal.nome, 230, startY, { width: 120, align: 'center' });
+        doc.text(animal.sexo, 350, startY, { width: 50, align: 'center' });
+        doc.text(animal.especie?.nome || '-', 400, startY, { width: 100, align: 'center' });
+
+        doc.moveDown(0.5); // Espaço entre as linhas
+      });
+
+      // Desenhando as linhas horizontais de separação para cada linha de adoção
+      arrecadacoes.forEach(() => {
+        const startY = doc.y + 10;
+        doc.moveTo(50, startY) // Linha de separação entre as linhas da tabela
+          .lineTo(550, startY)
+          .stroke();
+      });
+
+      // Finaliza o documento e envia a resposta
+      doc.pipe(res);
       doc.end();
     } catch (erro) {
       return res.status(500).json({ message: erro.message });

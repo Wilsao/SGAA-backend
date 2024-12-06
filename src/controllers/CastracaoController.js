@@ -186,7 +186,7 @@ class CastracaoController {
       });
 
       // Configuração do PDF
-      const doc = new PDFDocument();
+      const doc = new PDFDocument({ size: 'A4' });
       const filename = `relatorio-castracoes-${Date.now()}.pdf`;
 
       // Configuração dos cabeçalhos HTTP
@@ -194,37 +194,56 @@ class CastracaoController {
       res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
 
       // Cabeçalho do documento
-      doc.fontSize(16).text('Relatório de Castrações', { align: 'center' });
-      doc.fontSize(12).text(`Período: ${dataInicio} a ${dataFim}`, { align: 'center' });
-      doc.moveDown();
+      doc.fontSize(16).text('Relatório de Castrações', { align: 'center' }).moveDown(1);
+      doc.fontSize(10).text(`Período: ${dataInicio} a ${dataFim}`, { align: 'center' }).moveDown(2);
+
+      // Define o início do cabeçalho da tabela
+      const headerY = doc.y;
 
       // Cabeçalho da tabela
-      doc.fontSize(12).text('ID Castração', 50, doc.y, { continued: true });
-      doc.text('Animal', 150, doc.y, { continued: true });
-      doc.text('Status Animal', 250, doc.y, { continued: true });
-      doc.text('Espécie', 350, doc.y, { continued: true });
-      doc.text('Usuário', 450, doc.y);
-      doc.moveDown();
+      doc.fontSize(10).font('Helvetica-Bold');
+      doc.text('ID Castração', 50, headerY, { width: 60, align: 'center' });
+      doc.text('Animal', 110, headerY, { width: 120, align: 'center' });
+      doc.text('Status Animal', 230, headerY, { width: 100, align: 'center' });
+      doc.text('Espécie', 340, headerY, { width: 100, align: 'center' });
+      doc.text('Usuário', 450, headerY, { width: 100, align: 'center' });
 
-      // Preenchimento da tabela
+      // Desenha a linha de separação do cabeçalho
+      doc.moveTo(50, headerY + 10)
+        .lineTo(550, headerY + 10)
+        .stroke();
+      doc.moveDown(0.5);
+
+      // Preenchimento da tabela com os dados das castrações
       castracoes.forEach((castracao) => {
-        const { id, createdAt, Animal, Especie, Usuario } = castracao;
+        const { id, Animal, Especie, Usuario } = castracao;
+        const startY = doc.y + 10; // Posição Y para cada linha
 
-        doc.text(id, 50, doc.y, { continued: true });
-        doc.text(Animal?.nome || '-', 150, doc.y, { continued: true });
-        doc.text(Animal?.statusAnimal?.nome || '-', 250, doc.y, { continued: true });
-        doc.text(Especie?.nome || '-', 350, doc.y, { continued: true });
-        doc.text(Usuario?.nome || '-', 450, doc.y);
-        doc.moveDown();
+        // Desenhando as células da tabela
+        doc.text(id, 50, startY, { width: 60, align: 'center' });
+        doc.text(Animal?.nome || '-', 110, startY, { width: 120, align: 'center' });
+        doc.text(Animal?.statusAnimal?.nome || '-', 230, startY, { width: 100, align: 'center' });
+        doc.text(Especie?.nome || '-', 340, startY, { width: 100, align: 'center' });
+        doc.text(Usuario?.nome || '-', 450, startY, { width: 100, align: 'center' });
+
+        doc.moveDown(0.5); // Espaço entre as linhas
       });
 
-      // Finaliza e envia o documento
+      // Desenhando as linhas horizontais de separação para cada linha de castração
+      castracoes.forEach(() => {
+        const startY = doc.y + 10;
+        doc.moveTo(50, startY) // Linha de separação das linhas da tabela
+          .lineTo(550, startY)
+          .stroke();
+      });
+
       doc.pipe(res);
       doc.end();
     } catch (erro) {
       return res.status(500).json({ error: erro.message });
     }
   }
+
 }
 
 module.exports = new CastracaoController();
