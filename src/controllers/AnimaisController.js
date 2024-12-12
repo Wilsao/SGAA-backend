@@ -7,7 +7,24 @@ const PDFDocument = require('pdfkit');
 class AnimaisController {
   async obterTodos(req, res) {
     try {
+      const { status_animal_id, especie_id, sexo, castrado } = req.query;
+  
+      const whereConditions = {};
+  
+      if (status_animal_id) {
+        whereConditions.status_animal_id = parseInt(status_animal_id, 10);
+      }
+  
+      if (especie_id) {
+        whereConditions.especie_id = parseInt(especie_id, 10);
+      }
+  
+      if (sexo) {
+        whereConditions.sexo = sexo.toUpperCase(); 
+      }
+
       const animais = await database.Animal.findAll({
+        where: whereConditions,
         include: [
           {
             model: database.Pessoa,
@@ -26,13 +43,14 @@ class AnimaisController {
           },
         ],
       });
-
-      if (!animais)
+  
+      if (!animais || animais.length === 0)
         return res.status(404).json({ error: "Animais não encontrados" });
-
+  
       return res.json(animais);
     } catch (erro) {
-      return res.status(500).json(erro.message);
+      console.error('Erro no método obterTodos:', erro);
+      return res.status(500).json({ error: "Erro interno do servidor" });
     }
   }
 
@@ -94,7 +112,7 @@ class AnimaisController {
       }
       return res.status(200).json({ message: "Animal excluido com sucesso" });
     } catch (error) {
-      return res.status(500).json("message: " + error.errors[0].message);
+      return res.status(500).json("message: " + error);
     }
   }
 
@@ -118,7 +136,7 @@ class AnimaisController {
 
       return res.status(200).json(animais);
     } catch (error) {
-      return res.status(500).json("message: " + error.errors[0].message);
+      return res.status(500).json("message: " + error);
     }
   }
 

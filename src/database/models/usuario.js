@@ -50,7 +50,6 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
-    // Method to compare passwords
     async checkPassword(senha) {
       return await bcrypt.compare(senha, this.senha);
     }
@@ -122,24 +121,19 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       hooks: {
-        // Hook to handle password hashing and email uniqueness on creation
         async beforeCreate(usuario) {
-          // Email uniqueness check
           const existingUser = await Usuario.findOne({
             where: { email: usuario.email },
           });
           if (existingUser) {
             throw new Error("Já existe um usuário com esse e-mail.");
           }
-          // Password hashing
           if (usuario.senha) {
             const hash = await bcrypt.hash(usuario.senha, 10);
             usuario.senha = hash;
           }
         },
-        // Hook to handle password hashing and email uniqueness on update
         async beforeUpdate(usuario) {
-          // Email uniqueness check
           if (usuario.changed("email")) {
             const existingUser = await Usuario.findOne({
               where: {
@@ -151,7 +145,6 @@ module.exports = (sequelize, DataTypes) => {
               throw new Error("Esse e-mail já está em uso por outro usuário.");
             }
           }
-          // Password hashing if the password has changed
           if (usuario.changed("senha")) {
             if (usuario.senha) {
               const hash = await bcrypt.hash(usuario.senha, 10);

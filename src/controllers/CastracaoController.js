@@ -47,6 +47,7 @@ class CastracaoController {
       const novaCastracao = await database.Castracao.create(castracao);
       return res.status(201).json(novaCastracao);
     } catch (erro) {
+      console.log(req.body)
       return res.status(500).json(erro.message);
     }
   }
@@ -162,7 +163,7 @@ class CastracaoController {
         include: [
           {
             model: database.Animal,
-            as: 'Animal',
+            as: 'animal',
             attributes: ['id', 'nome'],
             include: [
               {
@@ -174,12 +175,12 @@ class CastracaoController {
           },
           {
             model: database.Especie,
-            as: 'Especie',
+            as: 'especie',
             attributes: ['id', 'nome'],
           },
           {
             model: database.Usuario,
-            as: 'Usuario',
+            as: 'usuario',
             attributes: ['id', 'nome'],
           },
         ],

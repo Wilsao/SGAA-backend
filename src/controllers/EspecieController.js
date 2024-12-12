@@ -46,7 +46,7 @@ class EspecieController {
       return res.status(201).json(novaEspecie);
     } catch (error) {
       return res.status(500).json({
-        mensagem: error.errors[0].message,
+        mensagem: error,
       });
     }
   }
@@ -64,7 +64,7 @@ class EspecieController {
         .status(200)
         .json({ mensagem: "Espécie atualizada com sucesso." });
     } catch (error) {
-      return res.status(500).json({ mensagem: error.errors[0].message });
+      return res.status(500).json({ mensagem: error });
     }
   }
 
@@ -77,7 +77,7 @@ class EspecieController {
       }
       return res.status(200).json({ message: "Especie excluída com sucesso" });
     } catch (error) {
-      return res.status(500).json({ mensagem: error.errors[0].message });
+      return res.status(500).json({ mensagem: error });
     }
   }
 
@@ -89,7 +89,7 @@ class EspecieController {
       });
       return res.status(200).json(especies);
     } catch (error) {
-      return res.status(500).json({ mensagem: error.errors[0].message });
+      return res.status(500).json({ mensagem: error });
     }
   }
 }

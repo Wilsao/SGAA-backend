@@ -48,6 +48,10 @@ module.exports = {
         type: Sequelize.ENUM("M", "F"),
         allowNull: false,
       },
+      castracao: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+      },
       cor_pelagem: {
         type: Sequelize.STRING,
         allowNull: false,

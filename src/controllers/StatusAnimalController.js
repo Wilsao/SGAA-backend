@@ -44,7 +44,7 @@ class StatusAnimalController {
       return res.status(201).json(novoStatusAnimal);
     } catch (error) {
       return res.status(500).json({
-        mensagem: error.errors[0].message,
+        mensagem: error,
       });
     }
   }
@@ -62,7 +62,7 @@ class StatusAnimalController {
         .status(200)
         .json({ mensagem: "Status do animal atualizado com sucesso." });
     } catch (error) {
-      return res.status(500).json({ mensagem: error.errors[0].message });
+      return res.status(500).json({ mensagem: "Não foi possível atualizar o status."});
     }
   }
 
@@ -75,7 +75,7 @@ class StatusAnimalController {
       }
       return res.status(200).json({ message: "Status do animal excluído com sucesso" });
     } catch (error) {
-      return res.status(500).json({ mensagem: error.errors[0].message });
+      return res.status(500).json({ mensagem: "Não foi possível excluir, existem animais com este status"});
     }
   }
 
@@ -87,7 +87,7 @@ class StatusAnimalController {
       });
       return res.status(200).json(statusAnimais);
     } catch (error) {
-      return res.status(500).json({ mensagem: error.errors[0].message });
+      return res.status(500).json({ mensagem: "Erro ao filtrar" });
     }
   }
 }

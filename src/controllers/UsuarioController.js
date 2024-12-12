@@ -24,7 +24,7 @@ class UsuarioController {
       if (!usuario)
         return res.status(404).json({ error: "Usuario não encontrado" });
 
-      usuario.senha = bcrypt.decrypt(usuario.senha);
+      // usuario.senha = bcrypt.decrypt(usuario.senha);
 
       return res.status(200).json(usuario);
     } catch (error) {
@@ -111,15 +111,12 @@ class UsuarioController {
         where: { id: id },
       });
       if (!usuarioExcluir) {
-        console.error("Usuário a ser excluído não encontrado");
         return res.status(404).json({ error: "Usuário não encontrado" });
       }
       await usuarioExcluir.destroy();
-      console.log("Usuário excluído com sucesso");
       return res.status(200).json({ message: "Usuário excluído com sucesso" });
     } catch (error) {
-      console.error("Erro ao excluir o usuário:", error.message);
-      return res.status(500).json({ error: error.message });
+      return res.status(500).json({ message: "Usuário não pode ser excluído" });
     }
   }
 
@@ -272,6 +269,9 @@ class UsuarioController {
   async definirNovaSenha(req, res) {
     const { usuario_id, resposta, senha } = req.body;
     try {
+      console.log(usuario_id);
+      console.log(resposta);
+      console.log(senha);
       if (!usuario_id || !resposta || !senha) {
         return res
           .status(400)
@@ -284,8 +284,8 @@ class UsuarioController {
       if (!usuario) {
         return res.status(404).json({ error: "Usuário não encontrado" });
       }
-      const respostaCorreta = await bcrypt.compare(resposta, usuario.resposta);
-      if (respostaCorreta) {
+
+      if (resposta == usuario.resposta) {
         const hashsenha = await bcrypt.hash(senha, 10);
         await database.Usuario.update(
           { senha: hashsenha },

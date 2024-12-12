@@ -23,7 +23,7 @@ module.exports = {
         defaultValue: true,
       },
       tipo: {
-        type: Sequelize.ENUM('celular', 'telefone', 'whatsapp'),
+        type: Sequelize.ENUM('email', 'telefone', 'whatsapp'),
         allowNull: false,
       },
       valor: {

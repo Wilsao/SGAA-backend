@@ -55,7 +55,7 @@ class PessoaController {
       return res.status(500).json({ error: error.message || "Erro no servidor" });
     }
   }
-  
+
   async adicionar(req, res) {
     const pessoaData = req.body;
     const transaction = await database.sequelize.transaction();
@@ -167,6 +167,7 @@ class PessoaController {
               .json({ error: "Já existe uma pessoa com esse CPF." });
           }
         }
+        dadosPessoa.cpf = cpf;
       }
       await database.Pessoa.update(dadosPessoa, { where: { id } });
       return res.status(200).json({ message: "Pessoa atualizada com sucesso" });
@@ -286,26 +287,30 @@ class PessoaController {
   async addContato(req, res) {
     const pessoaId = req.params.id;
     const { tipo, valor, status } = req.body;
-    const tiposPermitidos = ["celular", "telefone", "whatsapp"];
+    const tiposPermitidos = ["email", "telefone", "whatsapp"];
     try {
       const pessoa = await database.Pessoa.findByPk(pessoaId);
       if (!pessoa) {
         return res.status(404).json({ error: "Pessoa não encontrada" });
       }
+
       if (!tipo || !tiposPermitidos.includes(tipo)) {
         return res.status(400).json({
-          error:
-            "Tipo de contato inválido. Os tipos permitidos são: celular, telefone, whatsapp.",
+          error: "Tipo de contato inválido. Os tipos permitidos são: email, telefone, whatsapp.",
         });
       }
+
       if (!valor) {
-        return res
-          .status(400)
-          .json({ error: "O campo 'valor' é obrigatório." });
+        return res.status(400).json({ error: "O campo 'valor' é obrigatório." });
       }
-      const valorNumerico = valor.replace(/\D/g, "");
+
+      let valorProcessado = valor;
+      if (tipo !== 'email') {
+        valorProcessado = valor.replace(/\D/g, "");
+      }
+
       const contatoExistente = await database.Contato.findOne({
-        where: { pessoa_id: pessoaId, valor: valorNumerico },
+        where: { pessoa_id: pessoaId, valor: valorProcessado },
       });
       if (contatoExistente) {
         if (contatoExistente.status === false) {
@@ -317,11 +322,12 @@ class PessoaController {
         }
         return res
           .status(400)
-          .json({ error: "Este número já está cadastrado para este usuário." });
+          .json({ error: "Este contato já está cadastrado para este usuário." });
       }
+
       const novoContato = await database.Contato.create({
         tipo,
-        valor: valorNumerico,
+        valor: valorProcessado,
         status: status ?? true,
         pessoa_id: pessoaId,
       });
@@ -339,15 +345,12 @@ class PessoaController {
     const pessoaId = req.params.id;
     const contatoId = req.params.contatoId;
     const { tipo, valor, status } = req.body;
-    const tiposPermitidos = ["celular", "telefone", "whatsapp"];
+    const tiposPermitidos = ["email", "telefone", "whatsapp"];
     try {
       const contato = await database.Contato.findOne({
         where: {
           id: contatoId,
-          [Op.or]: [
-            { pessoa_id: pessoaId },
-            { id: contatoId, deletedAt: { [Op.ne]: null } }, // Inclui contatos excluídos
-          ],
+          pessoa_id: pessoaId,
         },
       });
       if (!contato) {
@@ -355,35 +358,42 @@ class PessoaController {
           message: "Contato não encontrado ou não está associado à pessoa",
         });
       }
+
       if (contato.status === false) {
         await contato.update({
           status: true,
-          // deletedAt: null, // Limpa o campo deletedAt
         });
         return res.status(200).json({
           message: "Contato reativado com sucesso",
           contato,
         });
       }
+
       if (!tipo || !tiposPermitidos.includes(tipo)) {
         return res.status(400).json({
-          error:
-            "Tipo de contato inválido. Os tipos permitidos são: celular, telefone, whatsapp.",
+          error: "Tipo de contato inválido. Os tipos permitidos são: email, telefone, whatsapp.",
         });
       }
+
       if (!valor) {
         return res
           .status(400)
           .json({ error: "O campo 'valor' é obrigatório." });
       }
-      const valorNumerico = valor.replace(/\D/g, "");
+
+      let valorProcessado = valor;
+      if (tipo !== 'email') {
+        valorProcessado = valor.replace(/\D/g, "");
+      }
+
       const contatoExistente = await database.Contato.findOne({
         where: {
           pessoa_id: pessoaId,
-          valor: valorNumerico,
+          valor: valorProcessado,
           id: { [Op.ne]: contatoId },
         },
       });
+
       if (contatoExistente) {
         if (contatoExistente.status === false) {
           await contatoExistente.update({ status: true });
@@ -393,12 +403,13 @@ class PessoaController {
           });
         }
         return res.status(400).json({
-          error: "Este número já está cadastrado para este usuário.",
+          error: "Este contato já está cadastrado para este usuário.",
         });
       }
+
       await contato.update({
         tipo,
-        valor: valorNumerico,
+        valor: valorProcessado,
         status: status ?? contato.status,
       });
       return res.status(200).json({

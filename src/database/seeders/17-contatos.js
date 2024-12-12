@@ -7,8 +7,8 @@ module.exports = {
       {
         pessoa_id: 1,
         status: 1,
-        tipo: 'celular',
-        valor: '11987654321',
+        tipo: 'email',
+        valor: 'mail@mail.com',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -31,8 +31,8 @@ module.exports = {
       {
         pessoa_id: 4,
         status: 1,
-        tipo: 'celular',
-        valor: '21987654321',
+        tipo: 'email',
+        valor: 'mail@mail.com',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -55,8 +55,8 @@ module.exports = {
       {
         pessoa_id: 7,
         status: 1,
-        tipo: 'celular',
-        valor: '31987654321',
+        tipo: 'email',
+        valor: 'mail@mail.com',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -79,8 +79,8 @@ module.exports = {
       {
         pessoa_id: 10,
         status: 1,
-        tipo: 'celular',
-        valor: '41987654321',
+        tipo: 'email',
+        valor: 'mail@mail.com',
         createdAt: new Date(),
         updatedAt: new Date(),
       }

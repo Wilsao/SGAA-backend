@@ -17,7 +17,7 @@ module.exports = {
           key: "id",
         },
         onUpdate: "CASCADE",
-        onDelete: "RESTRICT"
+        onDelete: "CASCADE"
       },
       animal_id: {
         allowNull: false,
@@ -27,7 +27,7 @@ module.exports = {
           key: "id",
         },
         onUpdate: "CASCADE",
-        oonDelete: "RESTRICT"
+        onDelete: "CASCADE"
       },
       pessoa_id: {
         allowNull: false,
@@ -37,7 +37,7 @@ module.exports = {
           key: "id",
         },
         onUpdate: "CASCADE",
-        onDelete: "RESTRICT"
+        onDelete: "CASCADE"
       },
       data_adocao: {
         type: Sequelize.DATE,

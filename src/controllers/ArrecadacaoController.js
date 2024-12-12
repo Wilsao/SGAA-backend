@@ -49,6 +49,7 @@ class ArrecadacaoController {
       const arrecadacao = await database.Arrecadacao.create(dados);
       return res.status(201).json(arrecadacao);
     } catch (erro) {
+      console.log(req.body)
       return res.status(500).json(erro.message);
     }
   }
@@ -169,7 +170,7 @@ class ArrecadacaoController {
         include: [
           {
             model: database.Usuario,
-            as: 'Usuario',
+            as: 'usuario',
             attributes: ['id', 'nome'],
           },
         ],

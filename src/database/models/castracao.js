@@ -2,31 +2,62 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Castracao extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       Castracao.belongsTo(models.Especie, {
         foreignKey: "especie_id",
+        as: "especie",
       });
       Castracao.belongsTo(models.Usuario, {
         foreignKey: "usuario_id",
+        as: "usuario",
       });
       Castracao.belongsTo(models.Animal, {
         foreignKey: "animal_id",
+        as: "animal",
       });
     }
   }
   Castracao.init(
     {
-      local_evento: DataTypes.STRING,
-      descricao: DataTypes.STRING,
-      data_evento: DataTypes.DATE,
-      quantidade_macho: DataTypes.INTEGER,
-      quantidade_femea: DataTypes.INTEGER,
-      status: DataTypes.BOOLEAN,
+      especie_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      usuario_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      animal_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      local_evento: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      descricao: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      data_evento: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      quantidade_macho: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      quantidade_femea: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      status: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
     },
